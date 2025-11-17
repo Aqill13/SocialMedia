@@ -39,24 +39,34 @@ namespace BusinessLayer.Concrete
             await _hub.Clients.Users(userId).ReceiveNotification(notification);
         }
 
-        public Task<List<Notification>> GetNotificationsForUserAsync(string userId, bool? isRead = null)
+        public async Task<List<Notification>> GetNotificationsForUserAsync(string userId, bool? isRead = null)
         {
-            throw new NotImplementedException();
+            return await _notificationRepository.GetNotificationsForUserAsync(userId, isRead);
         }
 
-        public Task<int> GetUnreadNotificationCountAsync(string userId)
+        public async Task<int> GetUnreadNotificationCountAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await _notificationRepository.GetUnreadNotificationCountAsync(userId);
         }
 
-        public Task MarkAllNotificationsAsReadAsync(string userId)
+        public async Task MarkAllNotificationsAsReadAsync(string userId)
         {
-            throw new NotImplementedException();
+            var notifications = await _notificationRepository.GetNotificationsForUserAsync(userId, false);
+            foreach (var notification in notifications)
+            {
+                notification.IsRead = true;
+                await _notificationRepository.UpdateAsync(notification);
+            }
         }
 
-        public Task MarkNotificationAsReadAsync(int notificationId)
+        public async Task MarkNotificationAsReadAsync(int notificationId)
         {
-            throw new NotImplementedException();
+            var notification = await _notificationRepository.GetByIdAsync(notificationId);
+            if (notification != null && !notification.IsRead)
+            {
+                notification.IsRead = true;
+                await _notificationRepository.UpdateAsync(notification);
+            }
         }
     }
 }

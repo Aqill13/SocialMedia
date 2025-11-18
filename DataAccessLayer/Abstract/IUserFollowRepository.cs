@@ -12,6 +12,6 @@ namespace DataAccessLayer.Abstract
         Task<bool> IsFollowingAsync(string followerId, string followingId);
         Task<List<UserFollow>> GetFollowersAsync(string userId);
         Task<List<UserFollow>> GetFollowingsAsync(string userId);
-        Task<UserFollow> GetFollowRecordAsync(string followerId, string followingId);
+        Task<UserFollow?> GetFollowRecordAsync(string followerId, string followingId);
     }
 }

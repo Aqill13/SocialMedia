@@ -32,6 +32,11 @@ namespace DataAccessLayer.Concrete
                 .ToListAsync();
         }
 
+        public async Task<UserFollow?> GetFollowRecordAsync(string followerId, string followingId)
+        {
+            return await _context.UserFollows.FirstOrDefaultAsync(x => x.FollowerId == followerId && x.FollowingId == followingId);
+        }
+
         public async Task<bool> IsFollowingAsync(string followerId, string followingId)
         {
             return await _context.UserFollows.AnyAsync(uf => uf.FollowerId == followerId && uf.FollowingId == followingId);

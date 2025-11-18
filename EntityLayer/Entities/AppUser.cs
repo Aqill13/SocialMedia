@@ -17,6 +17,7 @@ namespace EntityLayer.Entities
         public bool IsOnline { get; set; }
         public DateTime? LastActive { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public int ControleCode { get; set; }
         public int PostsCount { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }

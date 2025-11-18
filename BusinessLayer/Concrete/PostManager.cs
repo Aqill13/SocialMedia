@@ -19,8 +19,8 @@ namespace BusinessLayer.Concrete
         private readonly UserManager<AppUser> _userManager;
         private readonly IUserFollowRepository _userFollowRepository;
 
-        public PostManager(IPostRepository postRepository, IPostLikeRepository postLikeRepository, 
-            IPostCommentRepository postCommentRepository, INotificationService notificationService, 
+        public PostManager(IPostRepository postRepository, IPostLikeRepository postLikeRepository,
+            IPostCommentRepository postCommentRepository, INotificationService notificationService,
             UserManager<AppUser> userManager, IUserFollowRepository userFollowRepository) : base(postRepository)
         {
             _postRepository = postRepository;
@@ -34,6 +34,9 @@ namespace BusinessLayer.Concrete
         // Post
         public async Task<Post> CreatePostAsync(string userId, string? context, string? imageUrl)
         {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+                return null;
             var post = new Post
             {
                 UserId = userId,
@@ -42,12 +45,10 @@ namespace BusinessLayer.Concrete
                 CreatedAt = DateTime.UtcNow
             };
             await _postRepository.AddAsync(post);
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user != null)
-            {
-                user.PostsCount += 1;
-                await _userManager.UpdateAsync(user);
-            }
+
+            user.PostsCount += 1;
+            await _userManager.UpdateAsync(user);
+
             return post;
         }
 
@@ -60,7 +61,7 @@ namespace BusinessLayer.Concrete
         {
             if (profileUserId == viewerId)
                 return await _postRepository.GetUserPostsAsync(profileUserId);
-            
+
             var profileUser = await _userManager.FindByIdAsync(profileUserId);
             if (profileUser == null)
                 return new List<Post>();

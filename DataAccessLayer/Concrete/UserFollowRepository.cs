@@ -16,9 +16,26 @@ namespace DataAccessLayer.Concrete
         {
         }
 
+        public async Task<List<UserFollow>> GetFollowersAsync(string userId)
+        {
+            return await _context.UserFollows
+                .Where(uf => uf.FollowingId == userId)
+                .Include(uf => uf.Follower)
+                .ToListAsync();
+        }
+
+        public Task<List<UserFollow>> GetFollowingsAsync(string userId)
+        {
+            return _context.UserFollows
+                .Where(uf => uf.FollowerId == userId)
+                .Include(uf => uf.Following)
+                .ToListAsync();
+        }
+
         public async Task<bool> IsFollowingAsync(string followerId, string followingId)
         {
             return await _context.UserFollows.AnyAsync(uf => uf.FollowerId == followerId && uf.FollowingId == followingId);
         }
+
     }
 }

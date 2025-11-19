@@ -21,6 +21,9 @@ namespace DataAccessLayer.DbContext
         public DbSet<PostComment> PostComments { get; set; }
         public DbSet<PostLike> PostLikes { get; set; }
         public DbSet<FollowRequest> FollowRequests { get; set; }
+        public DbSet<UserProfileInfo> UserProfileInfos { get; set; }
+        public DbSet<UserEducation> UserEducations { get; set; }
+        public DbSet<UserWorkExperience> UserWorkExperiences { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -106,6 +109,7 @@ namespace DataAccessLayer.DbContext
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+
             // ---------- PostComment ----------
             builder.Entity<PostComment>(entity =>
             {
@@ -139,6 +143,39 @@ namespace DataAccessLayer.DbContext
 
                 entity.HasIndex(pl => new { pl.PostId, pl.UserId }).IsUnique();
             });
+            // ---------- UserProfileInfo (1:1) ----------
+            builder.Entity<UserProfileInfo>(entity =>
+            {
+                entity.HasKey(p => p.Id);
+
+                entity.HasOne(p => p.User)
+                      .WithOne(u => u.UserProfileInfo)
+                      .HasForeignKey<UserProfileInfo>(p => p.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ---------- UserWorkExperience (1:N) ----------
+            builder.Entity<UserWorkExperience>(entity =>
+            {
+                entity.HasKey(w => w.Id);
+
+                entity.HasOne(w => w.User)
+                      .WithMany(u => u.WorkExperiences)
+                      .HasForeignKey(w => w.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ---------- UserEducation (1:N) ----------
+            builder.Entity<UserEducation>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.User)
+                      .WithMany(u => u.Educations)
+                      .HasForeignKey(e => e.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
         }
     }
 }

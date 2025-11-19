@@ -12,7 +12,6 @@ namespace EntityLayer.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? ImageUrl { get; set; }
-        public string? Bio { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsOnline { get; set; }
         public DateTime? LastActive { get; set; }
@@ -21,7 +20,9 @@ namespace EntityLayer.Entities
         public int PostsCount { get; set; }
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }
-
+        public UserProfileInfo UserProfileInfo { get; set; }
+        public ICollection<UserWorkExperience> WorkExperiences { get; set; } = new List<UserWorkExperience>();
+        public ICollection<UserEducation> Educations { get; set; } = new List<UserEducation>();
         public ICollection<Post> Posts { get; set; } = new List<Post>();
         public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
         public ICollection<UserFollow> Followers { get; set; } = new List<UserFollow>();

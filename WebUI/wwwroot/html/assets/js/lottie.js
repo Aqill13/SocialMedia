@@ -1589,11 +1589,11 @@ function dataFunctionManager(){
         return function (animationData){
             if(checkVersion(minimumVersion,animationData.v)){
                 iterateLayers(animationData.layers);
-                if(animationData.assets){
-                    var i, len = animationData.assets.length;
+                if(animationData.~/html/assets){
+                    var i, len = animationData.~/html/assets.length;
                     for(i=0;i<len;i+=1){
-                        if(animationData.assets[i].layers){
-                            iterateLayers(animationData.assets[i].layers);
+                        if(animationData.~/html/assets[i].layers){
+                            iterateLayers(animationData.~/html/assets[i].layers);
 
                         }
                     }
@@ -1674,11 +1674,11 @@ function dataFunctionManager(){
         return function (animationData){
             if(checkVersion(minimumVersion,animationData.v)){
                 iterateLayers(animationData.layers);
-                if(animationData.assets){
-                    var i, len = animationData.assets.length;
+                if(animationData.~/html/assets){
+                    var i, len = animationData.~/html/assets.length;
                     for(i=0;i<len;i+=1){
-                        if(animationData.assets[i].layers){
-                            iterateLayers(animationData.assets[i].layers);
+                        if(animationData.~/html/assets[i].layers){
+                            iterateLayers(animationData.~/html/assets[i].layers);
 
                         }
                     }
@@ -1752,11 +1752,11 @@ function dataFunctionManager(){
         return function (animationData){
             if(checkVersion(minimumVersion,animationData.v)){
                 iterateLayers(animationData.layers);
-                if(animationData.assets){
-                    var i, len = animationData.assets.length;
+                if(animationData.~/html/assets){
+                    var i, len = animationData.~/html/assets.length;
                     for(i=0;i<len;i+=1){
-                        if(animationData.assets[i].layers){
-                            iterateLayers(animationData.assets[i].layers);
+                        if(animationData.~/html/assets[i].layers){
+                            iterateLayers(animationData.~/html/assets[i].layers);
 
                         }
                     }
@@ -1773,9 +1773,9 @@ function dataFunctionManager(){
         checkText(animationData);
         checkChars(animationData);
         checkShapes(animationData);
-        completeLayers(animationData.layers, animationData.assets, fontManager);
+        completeLayers(animationData.layers, animationData.~/html/assets, fontManager);
         animationData.__complete = true;
-        //blitAnimation(animationData, animationData.assets, fontManager);
+        //blitAnimation(animationData, animationData.~/html/assets, fontManager);
     }
 
     function completeText(data, fontManager){
@@ -4199,16 +4199,16 @@ var ImagePreloader = (function(){
         }
     }
 
-    function getAssetsPath(assetData, assetsPath, original_path) {
+    function getAssetsPath(assetData, ~/html/assetsPath, original_path) {
         var path = '';
         if (assetData.e) {
             path = assetData.p;
-        } else if(assetsPath) {
+        } else if(~/html/assetsPath) {
             var imagePath = assetData.p;
             if (imagePath.indexOf('images/index.html') !== -1) {
                 imagePath = imagePath.split('https://templates.iqonic.design/')[1];
             }
-            path = assetsPath + imagePath;
+            path = ~/html/assetsPath + imagePath;
         } else {
             path = original_path;
             path += assetData.u ? assetData.u : '';
@@ -4218,7 +4218,7 @@ var ImagePreloader = (function(){
     }
 
     function createImageData(assetData) {
-        var path = getAssetsPath(assetData, this.assetsPath, this.path);
+        var path = getAssetsPath(assetData, this.~/html/assetsPath, this.path);
         var img = createTag('img');
         img.crossOrigin = 'anonymous';
         img.addEventListener('load', this._imageLoaded.bind(this), false);
@@ -4234,13 +4234,13 @@ var ImagePreloader = (function(){
         return ob;
     }
 
-    function loadAssets(assets, cb){
+    function loadAssets(~/html/assets, cb){
         this.imagesLoadedCb = cb;
-        var i, len = assets.length;
+        var i, len = ~/html/assets.length;
         for (i = 0; i < len; i += 1) {
-            if(!assets[i].layers){
+            if(!~/html/assets[i].layers){
                 this.totalImages += 1;
-                this.images.push(this._createImageData(assets[i]));
+                this.images.push(this._createImageData(~/html/assets[i]));
             }
         }
     }
@@ -4250,7 +4250,7 @@ var ImagePreloader = (function(){
     }
 
     function setAssetsPath(path){
-        this.assetsPath = path || '';
+        this.~/html/assetsPath = path || '';
     }
 
     function getImage(assetData) {
@@ -4281,7 +4281,7 @@ var ImagePreloader = (function(){
         this.getImage = getImage;
         this._createImageData = createImageData;
         this._imageLoaded = imageLoaded;
-        this.assetsPath = '';
+        this.~/html/assetsPath = '';
         this.path = '';
         this.totalImages = 0;
         this.loadedAssets = 0;
@@ -5858,11 +5858,11 @@ BaseRenderer.prototype.addPendingElement = function(element){
     this.pendingElements.push(element);
 };
 
-BaseRenderer.prototype.searchExtraCompositions = function(assets){
-    var i, len = assets.length;
+BaseRenderer.prototype.searchExtraCompositions = function(~/html/assets){
+    var i, len = ~/html/assets.length;
     for(i=0;i<len;i+=1){
-        if(assets[i].xt){
-            var comp = this.createComp(assets[i]);
+        if(~/html/assets[i].xt){
+            var comp = this.createComp(~/html/assets[i]);
             comp.initExpressions();
             this.globalData.projectInterface.registerComposition(comp);
         }
@@ -6750,12 +6750,12 @@ HybridRenderer.prototype.initItems = function(){
     }
 };
 
-HybridRenderer.prototype.searchExtraCompositions = function(assets){
-    var i, len = assets.length;
+HybridRenderer.prototype.searchExtraCompositions = function(~/html/assets){
+    var i, len = ~/html/assets.length;
     var floatingContainer = createTag('div');
     for(i=0;i<len;i+=1){
-        if(assets[i].xt){
-            var comp = this.createComp(assets[i],floatingContainer,this.globalData.comp,null);
+        if(~/html/assets[i].xt){
+            var comp = this.createComp(~/html/assets[i],floatingContainer,this.globalData.comp,null);
             comp.initExpressions();
             this.globalData.projectInterface.registerComposition(comp);
         }
@@ -11304,13 +11304,13 @@ var AnimationItem = function () {
     this.playDirection = 1;
     this.playCount = 0;
     this.animationData = {};
-    this.assets = [];
+    this.~/html/assets = [];
     this.isPaused = true;
     this.autoplay = false;
     this.loop = true;
     this.renderer = null;
     this.animationID = createElementID();
-    this.assetsPath = '';
+    this.~/html/assetsPath = '';
     this.timeCompleted = 0;
     this.segmentPos = 0;
     this.subframeEnabled = subframeEnabled;
@@ -11356,7 +11356,7 @@ AnimationItem.prototype.setParams = function(params) {
     this.autoplay = 'autoplay' in params ? params.autoplay : true;
     this.name = params.name ? params.name :  '';
     this.autoloadSegments = params.hasOwnProperty('autoloadSegments') ? params.autoloadSegments :  true;
-    this.assetsPath = params.assetsPath;
+    this.~/html/assetsPath = params.~/html/assetsPath;
     if (params.animationData) {
         this.configAnimation(params.animationData);
     } else if(params.path){
@@ -11429,10 +11429,10 @@ AnimationItem.prototype.includeLayers = function(data) {
         this.renderer.globalData.fontManager.addChars(data.chars);
         this.renderer.globalData.fontManager.addFonts(data.fonts, this.renderer.globalData.defs);
     }
-    if(data.assets){
-        len = data.assets.length;
+    if(data.~/html/assets){
+        len = data.~/html/assets.length;
         for(i = 0; i < len; i += 1){
-            this.animationData.assets.push(data.assets[i]);
+            this.animationData.~/html/assets.push(data.~/html/assets[i]);
         }
     }
     this.animationData.__complete = false;
@@ -11474,9 +11474,9 @@ AnimationItem.prototype.imagesLoaded = function() {
 }
 
 AnimationItem.prototype.preloadImages = function() {
-    this.imagePreloader.setAssetsPath(this.assetsPath);
+    this.imagePreloader.setAssetsPath(this.~/html/assetsPath);
     this.imagePreloader.setPath(this.path);
-    this.imagePreloader.loadAssets(this.animationData.assets, this.imagesLoaded.bind(this));
+    this.imagePreloader.loadAssets(this.animationData.~/html/assets, this.imagesLoaded.bind(this));
 }
 
 AnimationItem.prototype.configAnimation = function (animData) {
@@ -11487,15 +11487,15 @@ AnimationItem.prototype.configAnimation = function (animData) {
         this.animationData = animData;
         this.totalFrames = Math.floor(this.animationData.op - this.animationData.ip);
         this.renderer.configAnimation(animData);
-        if(!animData.assets){
-            animData.assets = [];
+        if(!animData.~/html/assets){
+            animData.~/html/assets = [];
         }
 
-        this.assets = this.animationData.assets;
+        this.~/html/assets = this.animationData.~/html/assets;
         this.frameRate = this.animationData.fr;
         this.firstFrame = Math.round(this.animationData.ip);
         this.frameMult = this.animationData.fr / 1000;
-        this.renderer.searchExtraCompositions(animData.assets);
+        this.renderer.searchExtraCompositions(animData.~/html/assets);
         this.trigger('config_ready');
         this.preloadImages();
         this.loadSegments();
@@ -11793,12 +11793,12 @@ AnimationItem.prototype.getAssetsPath = function (assetData) {
     var path = '';
     if(assetData.e) {
         path = assetData.p;
-    } else if(this.assetsPath){
+    } else if(this.~/html/assetsPath){
         var imagePath = assetData.p;
         if(imagePath.indexOf('images/index.html') !== -1){
             imagePath = imagePath.split('https://templates.iqonic.design/')[1];
         }
-        path = this.assetsPath + imagePath;
+        path = this.~/html/assetsPath + imagePath;
     } else {
         path = this.path;
         path += assetData.u ? assetData.u : '';
@@ -11808,10 +11808,10 @@ AnimationItem.prototype.getAssetsPath = function (assetData) {
 };
 
 AnimationItem.prototype.getAssetData = function (id) {
-    var i = 0, len = this.assets.length;
+    var i = 0, len = this.~/html/assets.length;
     while (i < len) {
-        if(id == this.assets[i].id){
-            return this.assets[i];
+        if(id == this.~/html/assets[i].id){
+            return this.~/html/assets[i];
         }
         i += 1;
     }

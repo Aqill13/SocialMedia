@@ -25,7 +25,6 @@ namespace BusinessLayer.Concrete
             string host = _configuration["Smtp:Host"]!;
             int port = int.Parse(_configuration["Smtp:Port"]!);
             string fromEmail = _configuration["Smtp:FromEmail"]!;
-            bool enableSsl = bool.Parse(_configuration["Smtp:EnableSsl"]!);
             string username = _configuration["Smtp:Username"]!;
             string password = _configuration["Smtp:Password"]!;
 
@@ -37,7 +36,7 @@ namespace BusinessLayer.Concrete
             mimeMessage.Body = bodyBuilder.ToMessageBody();
 
             using var client = new SmtpClient();
-            await client.ConnectAsync(host, port, enableSsl);
+            await client.ConnectAsync(host, port, SecureSocketOptions.StartTls);
             await client.AuthenticateAsync(username, password);
             await client.SendAsync(mimeMessage);
             await client.DisconnectAsync(true);

@@ -105,6 +105,8 @@ namespace WebUI.Areas.User.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResendVerificationCode(string email)
         {
+            if (string.IsNullOrEmpty(email))
+                return RedirectToAction(nameof(VerifyAccount));
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
                 return RedirectToAction(nameof(Register));

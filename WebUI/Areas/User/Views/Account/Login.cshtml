@@ -1,14 +1,13 @@
-﻿
-@{
+﻿@{
     Layout = null;
 }
-@model RegisterViewModel
+@model LoginViewModel
 <!Doctype html>
 <html lang="en" class="theme-fs-md">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>SocialV | Register</title>
+    <title>SocialV | Login</title>
     <!-- Config Options -->
     <meta name="setting_options" content='{&quot;saveLocal&quot;:&quot;sessionStorage&quot;,&quot;storeKey&quot;:&quot;socialV&quot;,&quot;setting&quot;:{&quot;theme_scheme_direction&quot;:{&quot;value&quot;:&quot;ltr&quot;},&quot;theme_scheme&quot;:{&quot;value&quot;:&quot;light&quot;},&quot;theme_color&quot;:{&quot;colors&quot;:{&quot;--{{prefix}}primary&quot;:&quot;#50b5ff&quot;,&quot;--{{prefix}}info&quot;:&quot;#d592ff&quot;},&quot;value&quot;:&quot;theme-color-default&quot;},&quot;sidebar_type&quot;:{&quot;value&quot;:[]},&quot;sidebar_menu_style&quot;:{&quot;value&quot;:&quot;navs-rounded-all&quot;},&quot;footer&quot;:{&quot;value&quot;:&quot;default&quot;}}}'>
     <!-- End Config Options -->
@@ -54,7 +53,7 @@
                         </div>
                         <div class="sign-in-detail container-inside-top">
                             <div class="swiper swiper-general overflow-hidden " data-slide="1" data-laptop="1" data-tab="1" data-mobile="1"
-                                 data-mobile-sm="1" data-autoplay="true" data-loop="true" data-navigation="false" data-pagination="true"
+                                 data-mobile-sm="1" data-autoplay="true" data-loop="true" data-navigation="false" data-pagination="false" data-center="false"
                                  data-space="16">
                                 <ul class="swiper-wrapper list-inline m-0 p-0 ">
                                     <li class="swiper-slide">
@@ -90,52 +89,29 @@
                                 </a>
                                 <p class="mt-3 font-size-16">Welcome to socialV, a platform to connect with<br /> the social world</p>
                                 <div class="alert alert-danger" asp-validation-summary="ModelOnly"></div>
-
-                                <form asp-area="User" asp-controller="Account" asp-action="Register" class="mt-5" asp-antiforgery="true">
-                                    <div class="d-flex gap-2">
-                                        <div class="form-group text-start w-100">
-                                            <h6 class="form-label fw-bold">Firstname</h6>
-                                            <input type="text" asp-for="FirstName" class="form-control mb-0" placeholder="Your Firstname">
-                                            <span class="text-danger" asp-validation-for="FirstName"></span>
-                                        </div>
-                                        <div class="form-group text-start w-100">
-                                            <h6 class="form-label fw-bold">Lastname</h6>
-                                            <input type="text" asp-for="LastName" class="form-control mb-0" placeholder="Your Lastname">
-                                            <span class="text-danger" asp-validation-for="LastName"></span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group text-start">
-                                        <h6 class="form-label fw-bold">Email Address</h6>
-                                        <input type="email" asp-for="Email" class="form-control mb-0" placeholder="Your Email">
-                                        <span class="text-danger" asp-validation-for="Email"></span>
-                                    </div>
+                                <form asp-area="User" asp-controller="Account" asp-action="Login" asp-antiforgery="true" class="mt-5">
                                     <div class="form-group text-start">
                                         <h6 class="form-label fw-bold">Username</h6>
-                                        <input type="text" asp-for="UserName" class="form-control mb-0" placeholder="Create a username">
-                                        <span class="text-danger" asp-validation-for="UserName"></span>
+                                        <input type="text" asp-for="UserName" class="form-control mb-0" placeholder="Your Username">
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
                                     </div>
-                                    <div class="d-flex gap-2 align-items-center">
-                                        <div class="form-group text-start w-100">
-                                            <h6 class="form-label fw-bold">Your Password</h6>
-                                            <input type="password" asp-for="Password" class="passwordInput form-control mb-0" placeholder="Password" autocomplete="off" >
-                                            <span class="text-danger" asp-validation-for="Password"></span>
+                                    <div class="form-group text-start">
+                                        <div class="d-flex justify-content-between">
+                                            <h6 class="form-label fw-bold">Password</h6>
+                                            <i class="fa-solid fa-eye mt-3" id="passwordToggle"></i>
                                         </div>
-                                        <i class="fa-solid fa-eye mt-3" id="passwordToggleVisible"></i>
-                                        <div class="form-group text-start w-100">
-                                            <h6 class="form-label fw-bold">Confirm Password</h6>
-                                            <input type="password" asp-for="ConfirmPassword" class="passwordInput form-control mb-0" placeholder="Confirm password" autocomplete="off">
-                                            <span class="text-danger" asp-validation-for="ConfirmPassword"></span>
-                                        </div>
+                                        <input type="password" asp-for="Password" class="passwordInp form-control mb-0" placeholder="Your Password">
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
                                     <div class="d-flex align-items-center justify-content-between">
                                         <div class="form-check d-inline-block m-0">
-                                            <input type="checkbox" class="form-check-input">
-                                            <h6 class="form-check-label fw-500 font-size-14">I accept <a href="terms-of-service.html" class="fw-light ms-1">Terms and Conditions</a></h6>
+                                            <input type="checkbox" asp-for="RememberMe" class="form-check-input">
+                                            <h6 class="form-check-label fw-bold">Remember Me</h6>
                                         </div>
+                                        <a asp-area="User" asp-controller="Account" asp-action="ForgotPassword" class="font-italic">Forgot Password?</a>
                                     </div>
-
-                                    <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">Register</button>
-                                    <h6 class="mt-5">Already Have An Account ? <a asp-area="User" asp-controller="Account" asp-action="Login">Login</a></h6>
+                                    <button type="submit" class="btn btn-primary mt-4 fw-semibold text-uppercase w-100">Login</button>
+                                    <h6 class="mt-5">Don't Have An Account ? <a asp-area="User" asp-controller="Account" asp-action="Register">Register</a></h6>
                                 </form>
                             </div>
                         </div>
@@ -147,18 +123,11 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        $("#passwordToggleVisible").on("click", function () {
-            var passwordFields = $(".passwordInput");
-            passwordFields.each(function () {
-                var fieldType = $(this).attr("type");
-                if (fieldType === "password") {
-                    $(this).attr("type", "text");
-                    $("#passwordToggleVisible").removeClass("fa-eye").addClass("fa-eye-slash");
-                } else {
-                    $(this).attr("type", "password");
-                    $("#passwordToggleVisible").removeClass("fa-eye-slash").addClass("fa-eye");
-                }
-            });
+        $(document).on("click", "#passwordToggle", function () {
+            const input = $(".passwordInp");
+            const type = input.attr("type") === "password" ? "text" : "password";
+            input.attr("type", type);
+            $(this).toggleClass("fa-eye fa-eye-slash");
         });
     </script>
 

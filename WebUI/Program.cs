@@ -1,4 +1,6 @@
-﻿using DataAccessLayer.Abstract;
+﻿using BusinessLayer.Abstract;
+using BusinessLayer.Concrete;
+using DataAccessLayer.Abstract;
 using DataAccessLayer.Concrete;
 using DataAccessLayer.DbContext;
 using EntityLayer.Entities;
@@ -79,9 +81,13 @@ builder.Services.AddScoped<IFollowRequestRepository, FollowRequestRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
-builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
+
+builder.Services.AddScoped<IEmailService, EmailManager>();
+builder.Services.AddScoped<IFollowService, FollowManager>();
+builder.Services.AddScoped<INotificationService, NotificationManager>();
+builder.Services.AddScoped<IPostService, PostManager>();
 
 // Add SignalR
 builder.Services.AddSignalR();
@@ -103,9 +109,21 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "Admin",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+    endpoints.MapControllerRoute(
+      name: "User",
+      pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}"
+    );
+    endpoints.MapControllerRoute(
+      name: "default",
+      pattern: "{controller=Home}/{action=Index}/{id?}"
+    );
+});
 
 
 

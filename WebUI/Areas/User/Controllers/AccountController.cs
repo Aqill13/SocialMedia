@@ -28,6 +28,7 @@ namespace WebUI.Areas.User.Controllers
         public IActionResult Register() => View();
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
@@ -76,9 +77,10 @@ namespace WebUI.Areas.User.Controllers
             return View(model);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> VerifyAccount(VerifyAccountViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return View(model);
             var user = await _userManager.FindByEmailAsync(model.Email);
             if (user == null)
@@ -100,6 +102,7 @@ namespace WebUI.Areas.User.Controllers
 
         // Resend Verification Code
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResendVerificationCode(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -117,10 +120,77 @@ namespace WebUI.Areas.User.Controllers
             });
         }
 
+        // Forgot Password
+        [HttpGet]
+        public IActionResult ForgotPassword() => View();
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null || !user.EmailConfirmed)
+            {
+                ModelState.AddModelError("", "This email has not been verified in our system");
+                return View(model);
+            }
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var resetLink = Url.Action(
+                "ResetPassword",
+                "Account",
+                new { userId = user.Id, token = token },
+                protocol: HttpContext.Request.Scheme
+            );
+            await _emailService.SendEmailAsync(
+                $"{user.FirstName} {user.LastName}",
+                model.Email,
+                "Password reset",
+                $@"
+                    <h3>Hi, {user.FirstName}</h3>
+                    <p>You requested to reset your password.</p>
+                    <p>Click the link below to set a new password:</p>
+                    <p><a href=""{resetLink}"">Reset Password</a></p>
+                    <p>If you did not request this, please ignore this email.</p>
+                "
+            );
+            ViewBag.Message = "If this email exists in our system, a reset link has been sent.";
+            return View();
+        }
+
+        // Reset password
+        [HttpGet]
+        public IActionResult ResetPassword(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+                return RedirectToAction(nameof(Login));
+            var model = new ResetPasswordViewModel
+            {
+                UserId = userId,
+                Token = token
+            };
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+                return RedirectToAction(nameof(Login));
+            var result = await _userManager.ResetPasswordAsync(user, model.Token, model.NewPassword);
+            if (result.Succeeded)
+                return RedirectToAction(nameof(Login));
+            return View(model);
+        }
+
         // Login
         [HttpGet]
         public IActionResult Login() => View();
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
@@ -163,6 +233,15 @@ namespace WebUI.Areas.User.Controllers
             }
             ModelState.AddModelError("", "Invalid login attempt");
             return View(model);
+        }
+
+        // Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return RedirectToAction(nameof(Login));
         }
     }
 }

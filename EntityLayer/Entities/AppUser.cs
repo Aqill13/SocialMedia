@@ -12,6 +12,7 @@ namespace EntityLayer.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string? ImageUrl { get; set; }
+        public string? CoverImageUrl { get; set; }
         public bool IsPrivate { get; set; }
         public bool IsOnline { get; set; }
         public DateTime? LastActive { get; set; }

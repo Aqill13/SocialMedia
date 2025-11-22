@@ -1,0 +1,107 @@
+﻿@using static EntityLayer.Entities.UserSocialLink
+@model ProfileBaseViewModel
+@{
+    var user = Model.ProfileUser;
+    var username = user.UserName;
+    var links = Model.SocialLinks;
+}
+<style>
+    .social-data-block li i {
+        font-size: 18px;
+        color: var(--bs-primary);
+        transition: color 0.3s;
+        border-radius: 50%;
+        border: 1px solid var(--bs-primary);
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .social-data-block li i:hover{
+        color: #fff;
+        background-color: var(--bs-primary);
+    }
+   
+</style>
+
+<div class="col-sm-12">
+    <!-- user haqda -->
+    <div class="card profile-box">
+        <div class="card-body">
+            <div class="row align-items-center item-header-content">
+                <div class="col-lg-4 profile-left">
+                    <div class="social-links">
+                        <ul class="social-data-block d-flex align-items-center justify-content-center gap-3 list-inline p-0 m-0">
+                            @if (links.Count > 0)
+                            {
+                                @foreach (var link in links)
+                                {
+                                    var iconClass = link.Platform switch
+                                    {
+                                        SocialPlatform.Instagram => "fa-brands fa-instagram",
+                                        SocialPlatform.Facebook => "fa-brands fa-facebook-f",
+                                        SocialPlatform.Github => "fa-brands fa-github",
+                                        SocialPlatform.Linkedin => "fa-brands fa-linkedin-in",
+                                        SocialPlatform.Twitter => "fa-brands fa-x-twitter",
+                                        SocialPlatform.Youtube => "fa-brands fa-youtube",
+                                        _ => "ph ph-globe"
+                                    };
+                                    <li class="text-center">
+                                        <a href="@link.Url">
+                                            <i class="@iconClass"></i>
+                                        </a>
+                                    </li>
+                                }
+                            }
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 text-center profile-center">
+                    <div class="header-avatar position-relative d-inline-block">
+                        <span class="change-profile-image bg-primary rounded-pill d-flex flex-column justify-content-center align-items-center">
+                            <i class="ph ph-camera fs-5 text-white"></i>
+                        </span>
+                        <img src="@user.ImageUrl" alt="user"
+                             class="avatar-150 border border-4 border-white rounded-3">
+                        <span class="badge bg-success fw-500 letter-spacing-1 chat-status">online</span>
+                    </div>
+                    <h5 class="d-flex align-items-center justify-content-center gap-1 mb-2">
+                        @user.FirstName @user.LastName
+                        @* <span class="d-inline-flex align-items-center">
+                            <i class="ph-fill ph-seal-check fs-5 text-primary"></i>
+                        </span> *@
+                    </h5>
+                    <ul class="d-flex align-items-center justify-content-center gap-3 list-inline p-0 m-0">
+                        <li class="d-flex align-items-center gap-1">
+                            <i class="fa-regular fa-user"></i>
+                            @user.UserName
+                        </li>
+                        <li class="d-flex align-items-center gap-1">
+                            <i class="fa-regular fa-envelope"></i>
+                            @user.Email
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 profile-right">
+                    <ul class="user-meta list-inline p-0 d-flex align-items-center justify-content-center">
+                        <li>
+                            <h5>@user.PostsCount</h5>Posts
+                        </li>
+                        <li>
+                            <h5>@user.FollowersCount</h5>Followers
+                        </li>
+                        <li>
+                            <h5>@user.FollowingCount</h5>Following
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- user tablari -->
+    @await Html.PartialAsync("_ProfileTabs", Model)
+</div>

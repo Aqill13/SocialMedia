@@ -70,7 +70,7 @@
 
     <aside class="sidebar sidebar-default sidebar-base navs-rounded-all " id="first-tour" data-toggle="main-sidebar" data-sidebar="responsive">
         <div class="sidebar-header d-flex align-items-center justify-content-start position-relative">
-            <a href="index.html"
+            <a asp-area="User" asp-controller="Home" asp-action="Index"
                class="d-flex align-items-center gap-2 iq-header-logo">
                 <svg width="50" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path fill-rule="evenodd" clip-rule="evenodd"
@@ -471,121 +471,6 @@
                                                 </form>
                                                 <a href="javascript:void(0);" class="text-dark" data-bs-dismiss="modal"><i class="ph-bold ph-x fs-3"></i></a>
                                             </div>
-                                            <div class="d-none d-lg-flex align-items-center justify-content-between w-100">
-                                                <h4 class="modal-title" id="exampleModalFullscreenLabel">Recent</h4>
-                                                <a class="text-dark" href="javascript:void(0);">Clear All</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="item-header-scroll">
-                                        <div class="search-modal-body">
-                                            <div class="d-flex d-lg-none align-items-center justify-content-between w-100 p-3 pb-0">
-                                                <h5 class="modal-title h4" id="exampleModalFullscreenLabel">Recent</h5>
-                                                <a href="javascript:void(0);" class="text-dark">Clear All</a>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/page-img/19.jpg"
-                                                         class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <div>
-                                                            <a href="javascript:void(0);" class="h6">Paige Turner</a>
-                                                            <span class="profile-status-online"></span>
-                                                        </div>
-                                                        <span class="mb-0">Paige001</span>
-                                                    </div>
-                                                    <a href="#" class="font-size-16"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/page-img/18.jpg"
-                                                         class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <div>
-                                                            <a href="javascript:void(0);" class="h6">Monty Carlo</a>
-                                                            <span class="profile-status-online"></span>
-                                                        </div>
-                                                        <span>Carlo.m</span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/page-img/20.jpg"
-                                                         class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <div>
-                                                            <a href="javascript:void(0);" class="h6">Paul Molive</a>
-                                                            <span class="profile-status-offline"></span>
-                                                        </div>
-                                                        <span>Paul.45</span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="py-2 px-3">
-                                                <h5 class="modal-title" id="exampleModalFullscreenLabel">Suggestion</h5>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/user/06.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
-                                                         alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <a href="javascript:void(0);" class="h6">Annette Black</a>
-                                                        <span>Followed by Jerome_bell + 2 more</span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/user/08.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
-                                                         alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <a href="javascript:void(0);" class="h6">Ellyse Perry</a>
-                                                        <span>Followed by _@@rina</span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/user/15.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
-                                                         alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <a href="javascript:void(0);" class="h6">Pete Sariya</a>
-                                                        <span>Followed by chris_18 + 5 more</span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center search-hover py-2 px-3">
-                                                <div class="flex-shrink-0">
-                                                    <img src="~/html/assets/images/user/13.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
-                                                         alt="#">
-                                                </div>
-                                                <div class="d-flex ms-3 w-100 justify-content-between">
-                                                    <div class="d-flex flex-column">
-                                                        <a href="javascript:void(0);" class="h6">Aman Verma</a>
-                                                        <span>Followed by Jerome_bell and _@@rina </span>
-                                                    </div>
-                                                    <a href="#"><i class="ph ph-x fs-6"></i></a>
-                                                </div>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -613,7 +498,7 @@
                                                 <a href="javascript:void(0);" class="text-body">
                                                     <div class="thread d-flex justify-content-between rounded-0 py-2 px-3 mb-2">
                                                         <div class="d-flex flex-wrap">
-                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/store/06.jpg"
+                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/user/01.jpg"
                                                                  loading="lazy">
                                                             <div class="ms-3 d-inline-block">
                                                                 <h6 class="font-size-14">Casual Shoe</h6>
@@ -630,7 +515,7 @@
                                                 <a href="javascript:void(0);" class="text-body">
                                                     <div class="thread d-flex justify-content-between rounded-0 py-2 px-3 mb-2">
                                                         <div class="d-flex flex-wrap">
-                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/store/02.jpg"
+                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/user/01.jpg"
                                                                  loading="lazy">
                                                             <div class="ms-3 d-inline-block">
                                                                 <h6 class="font-size-14">Harsh Reality book</h6>
@@ -647,7 +532,7 @@
                                                 <a href="javascript:void(0);" class="text-body">
                                                     <div class="thread d-flex justify-content-between rounded-0 py-2 px-3 mb-2">
                                                         <div class="d-flex flex-wrap">
-                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/store/01.jpg"
+                                                            <img class="avatar-45 rounded align-top" src="~/html/assets/images/user/01.jpg"
                                                                  loading="lazy">
                                                             <div class="ms-3 d-inline-block">
                                                                 <h6 class="font-size-14">The Raze night book</h6>
@@ -709,7 +594,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/page-img/19.html"
+                                                        <img src="~/html/assets/images/page-img/19.jpg"
                                                              class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -725,7 +610,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/page-img/18.html"
+                                                        <img src="~/html/assets/images/page-img/18.jpg"
                                                              class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -741,7 +626,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/page-img/20.html"
+                                                        <img src="~/html/assets/images/page-img/20.jpg"
                                                              class="align-self-center img-fluid avatar-50 rounded-pill" alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -760,7 +645,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/user/06.html" class="align-self-center img-fluid avatar-50 rounded-pill"
+                                                        <img src="~/html/assets/images/user/06.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
                                                              alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -773,7 +658,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/user/08.html" class="align-self-center img-fluid avatar-50 rounded-pill"
+                                                        <img src="~/html/assets/images/user/08.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
                                                              alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -786,7 +671,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/user/15.html" class="align-self-center img-fluid avatar-50 rounded-pill"
+                                                        <img src="~/html/assets/images/user/15.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
                                                              alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -799,7 +684,7 @@
                                                 </div>
                                                 <div class="d-flex align-items-center search-hover py-2 px-3">
                                                     <div class="flex-shrink-0">
-                                                        <img src="~/html/assets/images/user/13.html" class="align-self-center img-fluid avatar-50 rounded-pill"
+                                                        <img src="~/html/assets/images/user/13.jpg" class="align-self-center img-fluid avatar-50 rounded-pill"
                                                              alt="#">
                                                     </div>
                                                     <div class="d-flex ms-3 w-100 justify-content-between">
@@ -1945,6 +1830,10 @@
         </div>
     </div>
 
+
+    <!--Jquery-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="~/html/assets/js/ProfilePage.js"></script>
     <!-- Backend Bundle JavaScript -->
     <script src="~/html/assets/js/libs.min.js"></script>
     <!-- Lodash Utility -->

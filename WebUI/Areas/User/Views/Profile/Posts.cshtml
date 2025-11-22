@@ -1,24 +1,29 @@
-﻿@{
-    ViewData["Title"] = "About";
+﻿
+
+@{
+    ViewData["Title"] = "Posts";
     Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
 }
-@model ProfileAboutViewModel
+@model ProfilePostsViewModel
+
 <div>
     <div class="position-relative">
     </div>
     <div class="content-inner " id="page_layout">
         <div class="container position-relative p-0">
             <div class="header-cover-img">
-                <img src="@Model.ProfileUser.CoverImageUrl" alt="cover img" />
+                 <img src="@Model.ProfileUser.CoverImageUrl" alt="cover img"/>
             </div>
         </div>
         <div class="container">
             <div class="row">
                 @await Html.PartialAsync("_ProfileHeader", Model)
                 <div id="profileMainContent">
-                    @await Html.PartialAsync("_ProfileAboutContent", Model)
+                    @await Html.PartialAsync("_ProfilePostsContent", Model)
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+

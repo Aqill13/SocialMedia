@@ -7,6 +7,7 @@ using EntityLayer.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using RealTimeLayer;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,11 +84,15 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
+builder.Services.AddScoped<IUserSocialLinkRepository, UserSocialLinkRepository>();
+builder.Services.AddScoped<IUserProfileVisibilityRepository, UserProfileVisibilityRepository>();
 
 builder.Services.AddScoped<IEmailService, EmailManager>();
 builder.Services.AddScoped<IFollowService, FollowManager>();
 builder.Services.AddScoped<INotificationService, NotificationManager>();
 builder.Services.AddScoped<IPostService, PostManager>();
+builder.Services.AddScoped<IUserSocialLinkService, UserSocialLinkManager>();
+builder.Services.AddScoped<IUserProfileVisibilityService, UserProfileVisibilityManager>();
 
 // Add SignalR
 builder.Services.AddSignalR();
@@ -124,6 +129,9 @@ app.UseEndpoints(endpoints =>
       pattern: "{controller=Home}/{action=Index}/{id?}"
     );
 });
+var cultureInfo = new CultureInfo("en-US");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 
 

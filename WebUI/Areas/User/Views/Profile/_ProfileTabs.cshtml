@@ -1,0 +1,87 @@
+﻿@model ProfileBaseViewModel
+@{
+    var user = Model.ProfileUser;
+    var username = user.UserName;
+    var links = Model.SocialLinks;
+}
+
+<div class="card">
+    <div class="card-body p-0">
+        <div class="user-tabing item-list-tabs">
+            <button id="scrollLeft" class="p-1 btn position-absolute start-0 top-50 translate-middle-y"
+                    style="z-index: 10;">
+                <i class="ph ph-caret-left fs-3"></i>
+            </button>
+            <ul class="nav nav-pills d-flex align-items-center profile-feed-items p-0 m-0 rounded flex-nowrap overflow-hidden"
+                id="tabContainer" style="scroll-behavior: smooth;">
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "post" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Posts" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-note"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Posts</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "about" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="About" asp-route-username="@username" asp-route-mode="main">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-user"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">About</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "friend" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-users"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Friends</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "group" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Groups" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-users-three"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Groups</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "notification" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Notifications" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-bell"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Notifications</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "message" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Messages" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-envelope-simple"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Messages</p>
+                    </a>
+                </li>
+                <li class="nav-item col-4 col-md-2 py-3">
+                    <a class="@(Model.ActiveTopTab == "invitation" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
+                       asp-area="User" asp-controller="Profile" asp-action="Invitations" asp-route-username="@username">
+                        <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
+                            <i class="ph ph-phone-call"></i>
+                        </span>
+                        <p class="mb-0 mt-0 mt-md-3">Invitations</p>
+                    </a>
+                </li>
+            </ul>
+            <button id="scrollRight" class="p-1 btn position-absolute end-0 top-50 translate-middle-y"
+                    style="z-index: 10;">
+                <i class="ph ph-caret-right fs-3"></i>
+            </button>
+        </div>
+    </div>
+</div>

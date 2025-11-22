@@ -1,0 +1,19 @@
+﻿@model ProfilePostsViewModel
+<div class="col-sm-12">
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="posts" role="tabpanel">
+            <div class="card-body p-0">
+                <div class="row">
+                    @if (Model.IsOwner)
+                    {
+                        @await Html.PartialAsync("_AddPostBox")
+                    }
+                    @foreach (var post in Model.Posts)
+                    {
+                        @await Html.PartialAsync("_PostCard", post)
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

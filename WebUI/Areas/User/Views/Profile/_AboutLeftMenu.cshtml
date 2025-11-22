@@ -1,0 +1,128 @@
+﻿@model ProfileAboutViewModel
+@{
+    var user = Model.ProfileUser;
+    var username = user.UserName;
+}
+
+<div class="accordion profile-settings-accordion" id="profileSettingsAccordion">
+    <div class="accordion-item mb-3">
+        <h2 class="accordion-header" id="profileSettingsHeading">
+            <button class="accordion-button collapsed rounded-2" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#profileSettingsCollapse">
+                @if (Model.IsOwner)
+                {
+                    <span class="btn-text d-flex align-items-center gap-2 flex-md-nowrap flex-wrap">
+                        <i class="ph ph-user"></i>
+                        Profile Setting
+                    </span>
+                }
+                else
+                {
+                    <span class="btn-text d-flex align-items-center gap-2 flex-md-nowrap flex-wrap">
+                        <i class="ph ph-user"></i>
+                        Profile information
+                    </span>
+                }
+                <i class="ph ph-caret-down"></i>
+            </button>
+        </h2>
+        <div id="profileSettingsCollapse" class="accordion-collapse collapse show"
+             aria-labelledby="profileSettingsHeading"
+             data-bs-parent="#profileSettingsAccordion">
+            <div class="accordion-body p-0">
+                <div class="mt-3">
+                    <a asp-area="User"
+                       asp-controller="Profile"
+                       asp-action="About"
+                       asp-route-username="@username"
+                       asp-route-section="profile"
+                       asp-route-sub="personal"
+                       asp-route-mode="right"
+                       class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "profile" && Model.ActiveSubSection == "personal" ? "active" : "")">
+                        Personal Information
+                    </a>
+                </div>
+                <div class="mt-3">
+                    <a asp-area="User"
+                       asp-controller="Profile"
+                       asp-action="About"
+                       asp-route-username="@username"
+                       asp-route-section="profile"
+                       asp-route-sub="hobbies"
+                       asp-route-mode="right"
+                       class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "profile" && Model.ActiveSubSection == "hobbies" ? "active" : "")">
+                        Hobbies and Interests
+                    </a>
+                </div>
+                <div class="mt-3">
+                    <a asp-area="User"
+                       asp-controller="Profile"
+                       asp-action="About"
+                       asp-route-username="@username"
+                       asp-route-section="profile"
+                       asp-route-sub="workeducation"
+                       asp-route-mode="right"
+                       class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "profile" && Model.ActiveSubSection == "workeducation" ? "active" : "")">
+                        Work and Education
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    @if (Model.IsOwner)
+    {
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="accountSettingsHeading">
+                <button class="accordion-button collapsed rounded-2" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#accountSettingsCollapse">
+                    <span class="btn-text d-flex align-items-center gap-2 flex-md-nowrap flex-wrap">
+                        <i class="ph ph-gear"></i> Account Settings
+                    </span>
+                    <i class="ph ph-caret-down"></i>
+                </button>
+            </h2>
+            <div id="accountSettingsCollapse" class="accordion-collapse collapse"
+                 aria-labelledby="accountSettingsHeading"
+                 data-bs-parent="#profileSettingsAccordion">
+                <div class="accordion-body p-0">
+                    <div class="mt-3">
+                        <a asp-area="User"
+                           asp-controller="Profile"
+                           asp-action="About"
+                           asp-route-username="@username"
+                           asp-route-section="account"
+                           asp-route-sub="visibility"
+                           asp-route-mode="right"
+                           class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "account" && Model.ActiveSubSection == "visibility" ? "active" : "")">
+                            Profile Visibility
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-area="User"
+                           asp-controller="Profile"
+                           asp-action="About"
+                           asp-route-username="@username"
+                           asp-route-section="account"
+                           asp-route-sub="privacy"
+                           asp-route-mode="right"
+                           class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "account" && Model.ActiveSubSection == "privacy" ? "active" : "")">
+                            Privacy and Security
+                        </a>
+                    </div>
+                    <div class="mt-3">
+                        <a asp-area="User"
+                           asp-controller="Profile"
+                           asp-action="About"
+                           asp-route-username="@username"
+                           asp-route-section="account"
+                           asp-route-sub="blocklist"
+                           asp-route-mode="right"
+                           class="about-ajax nav-link font-size-16 @(Model.ActiveSection == "account" && Model.ActiveSubSection == "blocklist" ? "active" : "")">
+                            Block List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

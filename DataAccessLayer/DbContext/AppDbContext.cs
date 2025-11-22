@@ -176,6 +176,36 @@ namespace DataAccessLayer.DbContext
                       .OnDelete(DeleteBehavior.Cascade);
             });
 
+            // ---------- UserSocialLink ----------
+            builder.Entity<UserSocialLink>(entity =>
+            {
+                entity.HasIndex(x => new { x.UserId, x.Platform }).IsUnique();
+                entity.Property(x => x.Url)
+                      .IsRequired()
+                      .HasMaxLength(40);
+
+                entity.Property(x => x.Platform)
+                      .HasConversion<int>();
+
+                entity.HasOne(x => x.User)
+                      .WithMany(u => u.SocialLinks)
+                      .HasForeignKey(x => x.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            // ------------ UserProfileVisibility ----------- >
+            builder.Entity<UserProfileVisibility>(entity =>
+            {
+                entity.HasKey(v => v.Id);
+                entity.Property(v => v.Visibility).HasConversion<int>();
+                entity.Property(v => v.Field).HasConversion<int>();
+                entity.HasOne(v => v.User)
+                      .WithMany(u => u.UserProfileVisibilities)
+                      .HasForeignKey(v => v.UserId)
+                      .OnDelete(DeleteBehavior.Cascade);
+                entity.HasIndex(v => new { v.UserId, v.Field }).IsUnique();
+            });
+
         }
     }
 }

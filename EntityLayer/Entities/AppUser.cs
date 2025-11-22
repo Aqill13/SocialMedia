@@ -22,6 +22,8 @@ namespace EntityLayer.Entities
         public int FollowersCount { get; set; }
         public int FollowingCount { get; set; }
         public UserProfileInfo UserProfileInfo { get; set; }
+        public ICollection<UserSocialLink> SocialLinks { get; set; } = new List<UserSocialLink>();
+        public ICollection<UserProfileVisibility> UserProfileVisibilities { get; set; } = new List<UserProfileVisibility>();
         public ICollection<UserWorkExperience> WorkExperiences { get; set; } = new List<UserWorkExperience>();
         public ICollection<UserEducation> Educations { get; set; } = new List<UserEducation>();
         public ICollection<Post> Posts { get; set; } = new List<Post>();

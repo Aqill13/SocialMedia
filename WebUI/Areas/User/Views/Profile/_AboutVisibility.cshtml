@@ -44,41 +44,4 @@
         </div>
     }
 </div>
-<script>
-    $(document).on("change", "#visibilitySelect", function () {
-        const field = $(this).data("field");  
-        const visibility = $(this).val();    
-        console.log(field);
-        console.log(visibility);
 
-        $.ajax({
-            url: "/User/Profile/UpdateVisibility",
-            type: "POST",
-            data: { field: field, visibility: visibility },
-            success: function () {
-                const Toast = Swal.mixin({
-                    toast: true,
-                    position: 'top-end',
-                    showConfirmButton: false,
-                    timer: 3000,
-                    timerProgressBar: true,
-                    customClass: {
-                        title: 'custom-toast-title'
-                    },
-                    didOpen: (toast) => {
-                        toast.addEventListener('mouseenter', Swal.stopTimer)
-                        toast.addEventListener('mouseleave', Swal.resumeTimer)
-                    }
-                });
-
-                Toast.fire({
-                    icon: 'success',
-                    title: `${field} field changed to ${visibility}`
-                });
-            },
-            error: function () {
-                alert("Could not update visibility");
-            }
-        });
-    });
-</script>

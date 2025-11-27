@@ -10,11 +10,8 @@
     <div class="position-relative">
     </div>
     <div class="content-inner " id="page_layout">
-        <div class="container position-relative p-0">
-            <div class="header-cover-img">
-                 <img src="@Model.ProfileUser.CoverImageUrl" alt="cover img"/>
-            </div>
-        </div>
+        @await Html.PartialAsync("_ProfileCoverImg", Model)
+
         <div class="container">
             <div class="row">
                 @await Html.PartialAsync("_ProfileHeader", Model)

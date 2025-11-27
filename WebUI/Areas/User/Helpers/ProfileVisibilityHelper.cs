@@ -5,7 +5,7 @@ namespace WebUI.Areas.User.Helpers
 {
     public class ProfileVisibilityHelper
     {
-        public static bool CanViewAboutInfo(ProfileAboutViewModel model, ProfileField field)
+        public static bool CanViewAboutInfo(ProfileBaseViewModel model, ProfileField field)
         {
             if (model == null) return false;
             if (model.IsOwner) return true;

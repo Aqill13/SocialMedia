@@ -7,8 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Abstract
 {
-    public interface IUserSocialLinkService : IGenericService<UserSocialLink>
+    public interface IUserWorkExperienceService : IGenericService<UserWorkExperience>
     {
-        Task<List<UserSocialLink>> GetUserSocialLinksAsync(string userId);
     }
 }

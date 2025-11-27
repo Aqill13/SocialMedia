@@ -5,60 +5,63 @@
 }
 
 
-<div class="tab-pane fade show active" id="v-pills-work-tab" role="tabpanel"
-     aria-labelledby="v-pills-work-tab">
+<div class="tab-pane fade show active" id="workEduTab">
     <div class="top-box d-flex justify-content-between align-items-center">
         <h4>Work and Education</h4>
-        @if (Model.IsOwner)
-        {
-            <a href="profile-edit.html"
-               class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary">
-                <i class="ph ph-pencil-simple"></i>
-            </a>
-        }
     </div>
     <hr>
 
     @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.WorkExperience))
     {
-        <ul class="suggestions-lists m-0 p-0">
+        <ul class="suggestions-lists m-0 p-0" id="workList">
             <li class="d-flex mb-4 align-items-center justify-content-between">
                 <div>
                     <h5>Work</h5>
                 </div>
                 @if (Model.IsOwner)
                 {
-                    <a class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary">
+                    <button class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary" id="workAddBtn">
                         <i class="ph ph-plus"></i>
-                    </a>
+                    </button>
                 }
             </li>
 
             @if (user.WorkExperiences != null && user.WorkExperiences.Any())
             {
-                @foreach (var edu in user.WorkExperiences)
+                @foreach (var work in user.WorkExperiences)
                 {
-                    <li class="d-flex mb-4 align-items-center justify-content-between">
+                    <li id="workItem_@work.Id" data-work-id="@work.Id" class="d-flex mb-4 align-items-center justify-content-between">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
 
                                 <div class="d-flex align-items-center gap-1">
                                     <i class="fa-solid fa-circle-check text-success"></i>
                                     <div class="ms-3">
-                                        <h6>@edu.CompanyName</h6>
-                                        <p class="mb-0">@edu.Position</p>
-                                        <p class="mb-0">
-                                            @edu.StartDate.ToString("MMMM yyyy") -
-                                            @(edu.EndDate != null ? edu.EndDate?.ToString("MMMM yyyy") : "Present")
+                                        <h6 class="work-company-text">@work.CompanyName</h6>
+                                        <p class="mb-0 work-position-text">@work.Position</p>
+                                        <p class="mb-0 work-date-text">
+                                            @work.StartDate.ToString("MMMM yyyy") -
+                                            @(work.EndDate != null ? work.EndDate?.ToString("MMMM yyyy") : "Present")
                                         </p>
                                     </div>
                                 </div>
                                 @if (Model.IsOwner)
                                 {
                                     <div class="edit-relation">
-                                        <a href="#" class="d-flex align-items-center gap-1">
+                                        <a href="#"
+                                           class="d-flex align-items-center gap-1 work-edit-btn"
+                                           data-id="@work.Id"
+                                           data-company="@work.CompanyName"
+                                           data-position="@work.Position"
+                                           data-start="@work.StartDate.ToString("yyyy-MM-dd")"
+                                           data-end="@(work.EndDate?.ToString("yyyy-MM-dd") ?? "")">
                                             <i class="ph ph-pencil-simple"></i>
                                             <span class="edit-btn">Edit</span>
+                                        </a>
+                                        <a href="#"
+                                           class="d-flex align-items-center gap-1 text-danger work-delete-btn mt-2" data-id="@work.Id">
+                                            <i class="ph ph-trash"></i>
+                                            <span class="delete-btn">Delete</span>
                                         </a>
                                     </div>
                                 }
@@ -69,29 +72,27 @@
             }
             else
             {
-                <p>No information entered.</p>
+                <p id="workNoInfoText" class="text-warning">No information entered</p>
             }
         </ul>
     }
     else
     {
         <h5>Work</h5>
-        <p>No information entered.</p>
+        <p>This information is confidential</p>
     }
-
-
+    
     <hr />
-
     @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Education))
     {
-        <ul class="suggestions-lists m-0 p-0">
+        <ul class="suggestions-lists m-0 p-0" id="educationList">
             <li class="d-flex mb-4 align-items-center justify-content-between">
                 <div>
                     <h5>Education</h5>
                 </div>
                 @if (Model.IsOwner)
                 {
-                    <a class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary">
+                    <a class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary" id="educationAddBtn">
                         <i class="ph ph-plus"></i>
                     </a>
                 }
@@ -101,16 +102,16 @@
             {
                 @foreach (var edu in user.Educations)
                 {
-                    <li class="d-flex mb-4 align-items-center justify-content-between">
+                    <li id="eduItem_@edu.Id" data-edu-id="@edu.Id" class="d-flex mb-4 align-items-center justify-content-between">
                         <div class="w-100">
                             <div class="d-flex justify-content-between align-items-center">
 
                                 <div class="d-flex align-items-center gap-1">
                                     <i class="fa-solid fa-circle-check text-success"></i>
                                     <div class="ms-3">
-                                        <h6>@edu.SchoolName</h6>
-                                        <p class="mb-0">@edu.Field - @edu.Degree</p>
-                                        <p class="mb-0">
+                                        <h6 class="edu-school-text">@edu.SchoolName</h6>
+                                        <p class="edu-fielddegree-text mb-0">@edu.Degree - @edu.Field</p>
+                                        <p class="edu-date-text mb-0">
                                             @edu.StartDate.ToString("MMMM yyyy") -
                                             @(edu.EndDate != null ? edu.EndDate?.ToString("MMMM yyyy") : "Present")
                                         </p>
@@ -119,9 +120,21 @@
                                 @if (Model.IsOwner)
                                 {
                                     <div class="edit-relation">
-                                        <a href="#" class="d-flex align-items-center gap-1">
+                                        <a href="#"
+                                           class="d-flex align-items-center gap-1 education-edit-btn"
+                                           data-id="@edu.Id"
+                                           data-school="@edu.SchoolName"
+                                           data-field="@edu.Field"
+                                           data-degree="@edu.Degree"
+                                           data-start="@edu.StartDate.ToString("yyyy-MM-dd")"
+                                           data-end="@(edu.EndDate?.ToString("yyyy-MM-dd") ?? "")">
                                             <i class="ph ph-pencil-simple"></i>
                                             <span class="edit-btn">Edit</span>
+                                        </a>
+                                        <a href="#"
+                                           class="d-flex align-items-center gap-1 text-danger edu-delete-btn mt-2" data-id="@edu.Id">
+                                            <i class="ph ph-trash"></i>
+                                            <span class="delete-btn">Delete</span>
                                         </a>
                                     </div>
                                 }
@@ -132,15 +145,109 @@
             }
             else
             {
-                <p>No information entered.</p>
+                <p id="educationNoInfoText" class="text-warning">No information entered</p>
             }
         </ul>
     }
     else
     {
         <h5>Education</h5>
-        <p>No information entered.</p>
+        <p>This information is confidential</p>
     }
 
-
 </div>
+
+
+@if (Model.IsOwner)
+{
+    <div class="tab-pane fade" id="workFormSection">
+        <div class="top-box d-flex justify-content-between align-items-center">
+            <h4 id="workFormTitle">Work</h4>
+            <button type="button" class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-danger section-cancel-btn" data-view="#workEduTab"
+                    data-edit="#workFormSection">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+        <hr>
+
+        <form asp-antiforgery="true" id="workForm" method="post">
+            <input type="hidden" name="Id" id="workId" />
+
+            <div class="mb-3">
+                <label class="form-label">Company</label>
+                <input type="text" name="CompanyName" id="workCompany" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Position</label>
+                <input type="text" name="Position" id="workPosition" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="StartDate" id="workStart" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" name="EndDate" id="workEnd" class="form-control" />
+                <small class="text-muted">Leave empty if you still work here.</small>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-secondary section-cancel-btn" data-view="#workEduTab" data-edit="#workFormSection">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" id="workSubmitBtn">Add</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="tab-pane fade" id="educationFormSection">
+        <div class="top-box d-flex justify-content-between align-items-center">
+            <h4 id ="educationFormTitle">Education</h4>
+            <button type="button" class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-danger section-cancel-btn" data-view="#workEduTab"
+                    data-edit="#educationFormSection">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+        <hr>
+
+        <form asp-antiforgery="true" id="educationForm" method="post">
+            <input type="hidden" name="Id" id="educationId" />
+
+            <div class="mb-3">
+                <label class="form-label">School</label>
+                <input type="text" name="SchoolName" id="educationSchool" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Field</label>
+                <input type="text" name="Field" id="educationField" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Degree</label>
+                <input type="text" name="Degree" id="educationDegree" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" name="StartDate" id="educationStart" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" name="EndDate" id="educationEnd" class="form-control" />
+                <small class="text-muted">Leave empty if you still study here.</small>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-outline-secondary section-cancel-btn" data-view="#workEduTab" data-edit="#educationFormSection">
+                    Cancel
+                </button>
+                <button type="submit" class="btn btn-primary" id="educationSubmitBtn">Add</button>
+            </div>
+        </form>
+    </div>
+}

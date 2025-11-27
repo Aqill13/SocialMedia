@@ -1,0 +1,33 @@
+﻿@model ProfileAboutViewModel
+@{
+    var user = Model.ProfileUser;
+}
+
+<div class="tab-pane fade show active" id="v-pills-privacy-tab" role="tabpanel"
+     aria-labelledby="v-pills-privacy-tab">
+    <div class="top-box d-flex justify-content-between align-items-center">
+        <h4>Privacy and Security</h4>
+    </div>
+    <hr>
+    <div class="notification-title">
+        <div class="d-flex align-items-center gap-1">
+            <label class="switchPrivateAccLabel">
+                <input id="privateAccCheckInp" type="checkbox" @(user.IsPrivate ? "checked" : "")>
+                <span class="sliderprivateAccSpan"></span>
+            </label>
+            @if (user.IsPrivate)
+            {
+                <span id="privateAccStatusText" class="fs-6 text-primary">Your account is private</span>
+            }
+            else
+            {
+                <span id="privateAccStatusText" class="fs-6">Your account is public</span>
+            }
+        </div>
+        
+        <p class="text-body mb-0 fs-6 mt-2">
+            When your account is private, only your friends can see your profile and
+            activities.
+        </p>
+    </div>
+</div>

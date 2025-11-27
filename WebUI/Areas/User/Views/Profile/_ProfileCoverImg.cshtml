@@ -1,0 +1,14 @@
+﻿@model ProfileBaseViewModel
+
+<div class="container position-relative p-0">
+    <div class="header-cover-img">
+        @if (Model.IsOwner)
+        {
+            <span id="headerProfileCoverImgBtn" class="bg-primary rounded-pill cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Change the cover image">
+                <i class="ph ph-camera fs-5 text-white" onclick="document.getElementById('imageUploadInp').click()"></i>
+            </span>
+            <input type="file" id="imageUploadInp" onchange="openCropperModal(event)" class="d-none" />
+        }
+        <img src="@Model.ProfileUser.CoverImageUrl" alt="cover img" />
+    </div>
+</div>

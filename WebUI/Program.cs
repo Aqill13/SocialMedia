@@ -85,7 +85,10 @@ builder.Services.AddScoped<IPostLikeRepository, PostLikeRepository>();
 builder.Services.AddScoped<IPostCommentRepository, PostCommentRepository>();
 builder.Services.AddScoped<IUserFollowRepository, UserFollowRepository>();
 builder.Services.AddScoped<IUserSocialLinkRepository, UserSocialLinkRepository>();
-builder.Services.AddScoped<IUserProfileVisibilityRepository, UserProfileVisibilityRepository>();
+builder.Services.AddScoped<IUserProfileVisibilityRepository, UserProfileVisibilityRepository>(); 
+builder.Services.AddScoped<IUserProfileInfoRepository, UserProfileInfoRepository>();
+builder.Services.AddScoped<IUserWorkExperienceRepository, UserWorkExperienceRepository>();
+builder.Services.AddScoped<IUserEducationRepository, UserEducationRepository>();
 
 builder.Services.AddScoped<IEmailService, EmailManager>();
 builder.Services.AddScoped<IFollowService, FollowManager>();
@@ -93,6 +96,10 @@ builder.Services.AddScoped<INotificationService, NotificationManager>();
 builder.Services.AddScoped<IPostService, PostManager>();
 builder.Services.AddScoped<IUserSocialLinkService, UserSocialLinkManager>();
 builder.Services.AddScoped<IUserProfileVisibilityService, UserProfileVisibilityManager>();
+builder.Services.AddScoped<IUserProfileInfoService, UserProfileInfoManager>();
+builder.Services.AddScoped<IUserWorkExperienceService, UserWorkExperienceManager>();
+builder.Services.AddScoped<IUserEducationService, UserEducationManager>();
+
 
 // Add SignalR
 builder.Services.AddSignalR();

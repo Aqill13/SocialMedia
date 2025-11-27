@@ -18,15 +18,22 @@ namespace WebUI.Areas.User.Controllers
         private readonly IUserSocialLinkService _userSocialLinkService;
         private readonly IUserProfileVisibilityService _userProfileVisibilityService;
         private readonly IFollowService _followService;
+        private readonly IUserProfileInfoService _userProfileInfoService;
+        private readonly IUserWorkExperienceService _userWorkExperienceService;
+        private readonly IUserEducationService _userEducationService;
 
         public ProfileController(UserManager<AppUser> userManager, IPostService postService, IUserSocialLinkService userSocialLinkService,
-            IUserProfileVisibilityService userProfileVisibilityService, IFollowService followService)
+            IUserProfileVisibilityService userProfileVisibilityService, IFollowService followService, IUserProfileInfoService userProfileInfoService,
+            IUserWorkExperienceService userWorkExperienceService, IUserEducationService userEducationService)
         {
             _userManager = userManager;
             _postService = postService;
             _userSocialLinkService = userSocialLinkService;
             _userProfileVisibilityService = userProfileVisibilityService;
             _followService = followService;
+            _userProfileInfoService = userProfileInfoService;
+            _userWorkExperienceService = userWorkExperienceService;
+            _userEducationService = userEducationService;
         }
         // Posts
         public async Task<IActionResult> Posts(string? username)
@@ -44,13 +51,15 @@ namespace WebUI.Areas.User.Controllers
             var currentUserId = _userManager.GetUserId(User);
             var posts = await _postService.GetProfilePostsAsync(profileUser.Id, currentUserId!);
             var socialLinks = await _userSocialLinkService.GetUserSocialLinksAsync(profileUser.Id);
+            var visibilitySettings = await _userProfileVisibilityService.GetUserProfileVisibilitySettingsAsync(profileUser.Id);
             var model = new ProfilePostsViewModel
             {
                 ProfileUser = profileUser,
                 SocialLinks = socialLinks,
                 Posts = posts,
                 ActiveTopTab = "post",
-                IsOwner = profileUser.Id == currentUserId
+                IsOwner = profileUser.Id == currentUserId,
+                VisibilitySettings = visibilitySettings
             };
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -138,6 +147,304 @@ namespace WebUI.Areas.User.Controllers
             var currentUserId = _userManager.GetUserId(User);
             await _userProfileVisibilityService.SetUserProfileVisibilityAsync(currentUserId!, field, visibility);
             return Ok();
+        }
+
+        // Profile Info Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfileInfo(ProfileInfoEditViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            var profileInfo = await _userProfileInfoService.GetFirstAsync(x => x.UserId == currentUser.Id);
+            if (profileInfo == null)
+            {
+                profileInfo = new UserProfileInfo
+                {
+                    UserId = currentUser.Id
+                };
+                await _userProfileInfoService.AddAsync(profileInfo);
+            }
+            profileInfo.BirthDate = model.BirthDate;
+            profileInfo.Location = model.Location;
+            profileInfo.Birthplace = model.Birthplace;
+            profileInfo.LivesIn = model.LivesIn;
+            profileInfo.Gender = model.Gender;
+            profileInfo.Status = model.Status;
+            profileInfo.Bio = model.Bio;
+            await _userProfileInfoService.UpdateAsync(profileInfo);
+            return Json(new
+            {
+                success = true,
+                message = "Profile information updated successfully.",
+                data = new
+                {
+                    birthDate = profileInfo.BirthDate?.ToString("d"),
+                    location = profileInfo.Location,
+                    birthplace = profileInfo.Birthplace,
+                    livesIn = profileInfo.LivesIn,
+                    gender = profileInfo.Gender,
+                    status = profileInfo.Status,
+                    bio = profileInfo.Bio
+                }
+            });
+        }
+
+        // Hobbies And Interests Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateHobbiesAndInterests(HobbiesAndInterestsUpdateViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            var profileInfo = await _userProfileInfoService.GetFirstAsync(x => x.UserId == currentUser.Id);
+            if (profileInfo == null)
+            {
+                profileInfo = new UserProfileInfo
+                {
+                    UserId = currentUser.Id
+                };
+                await _userProfileInfoService.AddAsync(profileInfo);
+            }
+            profileInfo.Hobbies = model.Hobbies;
+            profileInfo.FavoriteBooks = model.FavoriteBooks;
+            profileInfo.FavoriteMovies = model.FavoriteMovies;
+            profileInfo.FavoriteGames = model.FavoriteGames;
+            await _userProfileInfoService.UpdateAsync(profileInfo);
+            return Json(new
+            {
+                success = true,
+                message = "Hobbies and interests updated successfully.",
+                data = new
+                {
+                    hobbies = profileInfo.Hobbies,
+                    favoriteBooks = profileInfo.FavoriteBooks,
+                    favoriteMovies = profileInfo.FavoriteMovies,
+                    favoriteGames = profileInfo.FavoriteGames
+                }
+            });
+        }
+
+        // Work Experience Add/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrUpdateWorkExperience(WorkExperienceEditViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            UserWorkExperience entity;
+            if (model.Id > 0)
+            {
+                entity = await _userWorkExperienceService.GetByIdAsync(model.Id);
+                if (entity == null || entity.UserId != currentUser.Id)
+                    return Json(new { success = false, message = "Work experience not found" });
+                entity.CompanyName = model.CompanyName;
+                entity.Position = model.Position;
+                entity.StartDate = model.StartDate;
+                entity.EndDate = model.EndDate;
+                await _userWorkExperienceService.UpdateAsync(entity);
+            }
+            else
+            {
+                entity = new UserWorkExperience
+                {
+                    UserId = currentUser.Id,
+                    CompanyName = model.CompanyName,
+                    Position = model.Position,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate
+                };
+                await _userWorkExperienceService.AddAsync(entity);
+            }
+            return Json(new
+            {
+                success = true,
+                message = "Work experience saved successfully",
+                data = new
+                {
+                    id = entity.Id,
+                    companyName = entity.CompanyName,
+                    position = entity.Position,
+                    startDateDisplay = entity.StartDate.ToString("MMMM yyyy"),
+                    endDateDisplay = entity.EndDate?.ToString("MMMM yyyy") ?? "Present",
+                    startDateValue = entity.StartDate.ToString("yyyy-MM-dd"),
+                    endDateValue = entity.EndDate?.ToString("yyyy-MM-dd") ?? ""
+                }
+            });
+        }
+
+        // Work Experience Delete
+        [HttpPost]
+        public async Task<IActionResult> DeleteWorkExperience(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            var entity = await _userWorkExperienceService.GetByIdAsync(id);
+            if (entity == null || entity.UserId != currentUser.Id)
+                return Json(new { success = false, message = "Work experience could not be deleted" });
+            await _userWorkExperienceService.DeleteAsync(entity);
+            return Json(new { success = true, message = "Work experience deleted successfully" });
+        }
+
+        // Education Add/Update
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddOrUpdateEducation(EducationEditViewModel model)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            UserEducation entity;
+            if (model.Id > 0)
+            {
+                entity = await _userEducationService.GetByIdAsync(model.Id);
+                if (entity == null || entity.UserId != currentUser.Id)
+                    return Json(new { success = false, message = "Education not found" });
+                entity.StartDate = model.StartDate;
+                entity.EndDate = model.EndDate;
+                entity.SchoolName = model.SchoolName;
+                entity.Field = model.Field;
+                entity.Degree = model.Degree;
+                await _userEducationService.UpdateAsync(entity);
+            }
+            else
+            {
+                entity = new UserEducation
+                {
+                    Degree = model.Degree,
+                    StartDate = model.StartDate,
+                    EndDate = model.EndDate,
+                    Field = model.Field,
+                    SchoolName = model.SchoolName,
+                    UserId = currentUser.Id
+                };
+                await _userEducationService.AddAsync(entity);
+            }
+            return Json(new
+            {
+                success = true,
+                message = "Education saved successfully",
+                data = new
+                {
+                    id = entity.Id,
+                    schoolName = entity.SchoolName,
+                    field = entity.Field,
+                    degree = entity.Degree,
+                    startDateDisplay = entity.StartDate.ToString("MMMM yyyy"),
+                    endDateDisplay = entity.EndDate?.ToString("MMMM yyyy") ?? "Present",
+                    startDateValue = entity.StartDate.ToString("yyyy-MM-dd"),
+                    endDateValue = entity.EndDate?.ToString("yyyy-MM-dd") ?? ""
+                }
+            });
+        }
+
+        // Delete education
+        [HttpPost]
+        public async Task<IActionResult> DeleteEducation(int id)
+        {
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            var entity = await _userEducationService.GetByIdAsync(id);
+            if (entity == null || entity.UserId != currentUser.Id)
+                return Json(new { success = false, message = "Education could not be deleted" });
+            await _userEducationService.DeleteAsync(entity);
+            return Json(new { success = true, message = "Education deleted successfully" });
+        }
+
+        // User Account Public / Private 
+        [HttpPost]
+        public async Task<IActionResult> TogglePrivateAccount(bool isPrivate)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            user.IsPrivate = isPrivate;
+            await _userManager.UpdateAsync(user);
+            return Json(new
+            {
+                success = true,
+                message = isPrivate ? "Your account is now private" : "Your account is now public"
+            });
+        }
+
+        // Add social link
+        [HttpPost]
+        public async Task<IActionResult> AddSocialLink(UserSocialLink.SocialPlatform platform, string url)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+
+            var link = new UserSocialLink
+            {
+                UserId = user.Id,
+                Platform = platform,
+                Url = url,
+                IsVisible = true
+            };
+            await _userSocialLinkService.AddAsync(link);
+            var iconClass = platform switch
+            {
+                UserSocialLink.SocialPlatform.Instagram => "fa-brands fa-instagram",
+                UserSocialLink.SocialPlatform.Facebook => "fa-brands fa-facebook-f",
+                UserSocialLink.SocialPlatform.Github => "fa-brands fa-github",
+                UserSocialLink.SocialPlatform.Linkedin => "fa-brands fa-linkedin-in",
+                UserSocialLink.SocialPlatform.Twitter => "fa-brands fa-x-twitter",
+                UserSocialLink.SocialPlatform.Youtube => "fa-brands fa-youtube",
+                _ => "ph ph-globe"
+            };
+
+            return Json(new
+            {
+                success = true,
+                message = "Added successfully",
+                platformValue = (int)platform,
+                iconClass = iconClass,
+                url = url
+            });
+        }
+
+        // Change Profile Image
+        [HttpPost]
+        public async Task<IActionResult> ChangeProfileImage(IFormFile file)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+                return RedirectToAction("Login", "Account", new { area = "User" });
+            if (file != null && file.Length > 0)
+            {
+                var oldImageUrl = user.ImageUrl;
+                var newFileName = Guid.NewGuid() + ".png";
+                var filePath = Path.Combine("wwwroot", "uploads/profilep", newFileName);
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+                user.ImageUrl = "/uploads/profilep/" + newFileName;
+                await _userManager.UpdateAsync(user);
+                if (!string.IsNullOrWhiteSpace(oldImageUrl) && !oldImageUrl.Contains("default-profile-account")) 
+                {
+                    var oldPhysicalPath = Path.Combine("wwwroot", oldImageUrl.TrimStart('/', '\\'));
+                    if (System.IO.File.Exists(oldPhysicalPath))
+                        System.IO.File.Delete(oldPhysicalPath);
+                }
+                return Json(new
+                {
+                    success = true,
+                    message = "Profile image updated successfully",
+                    imageUrl = user.ImageUrl
+                });
+            }
+            return Json(new
+            {
+                success = false,
+                message = "No file selected"
+            });
         }
     }
 }

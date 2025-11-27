@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Concrete
 {
-    public class UserSocialLinkManager : IUserSocialLinkService
+    public class UserSocialLinkManager : GenericManager<UserSocialLink>, IUserSocialLinkService
     {
         private readonly IUserSocialLinkRepository _userSocialLinkRepository;
 
-        public UserSocialLinkManager(IUserSocialLinkRepository userSocialLinkRepository)
+        public UserSocialLinkManager(IUserSocialLinkRepository userSocialLinkRepository) : base(userSocialLinkRepository) 
         {
             _userSocialLinkRepository = userSocialLinkRepository;
         }

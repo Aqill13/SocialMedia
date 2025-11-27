@@ -1,6 +1,9 @@
 ﻿
 @{
     Layout = null;
+    string active = "active";
+    string controller = ViewContext.RouteData.Values["controller"].ToString();
+    string action = ViewContext.RouteData.Values["action"].ToString();
 }
 
 
@@ -16,6 +19,8 @@
     <!-- End Config Options -->
     <link rel="shortcut icon" href="~/html/assets/images/favicon.ico" />
     <link rel="stylesheet" href="~/html/assets/css/libs.min.css">
+    <!-- cropper  -->
+    <link rel="stylesheet" href="https://unpkg.com/cropperjs@1.6.1/dist/cropper.min.css" />
 
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -23,8 +28,6 @@
           rel="stylesheet">
     <!-- flatpickr css -->
     <link rel="stylesheet" href="~/html/assets/vendor/flatpickr/dist/flatpickr.min.css" />
-    <!-- Sweetlaert2 css -->
-    <link rel="stylesheet" href="~/html/assets/vendor/sweetalert2/dist/sweetalert2.min.css" />
 
     <!-- vanillajs css -->
     <link rel="stylesheet" href="~/html/assets/vendor/vanillajs-datepicker/dist/css/datepicker.min.css">
@@ -96,49 +99,49 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link gap-1 active" aria-current="page"
+                        <a class="nav-link gap-1 @(controller == "Home" && action == "Index" ? active : "")" aria-current="page"
                            href="index.html">
                             <i class="icon ph ph-newspaper"></i>
                             <span class="item-name">Newsfeed</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link gap-1 " aria-current="page"
-                           href="profile.html">
+                        <a class="nav-link gap-1 @(controller == "Profile" ? active : "")" aria-current="page"
+                        asp-area="User" asp-controller="Profile" asp-action="Posts">
                             <i class="icon ph ph-user"></i>
                             <span class="item-name">Profile</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link gap-1" data-bs-toggle="collapse" href="#friend-list" role="button" aria-expanded="false"
+                        <a class="nav-link gap-1 @(controller == "Friend" ? active : "")" href="#friend-list" data-bs-toggle="collapse" role="button" aria-expanded="false"
                            aria-controls="sidebar-special">
                             <i class="icon ph ph-users"></i>
-                            <span class="item-name">Friend</span>
+                            <span class="item-name">Friends</span>
                             <i class="right-icon ph ph-caret-right fs-5"></i>
                         </a>
-                        <ul class="sub-nav collapse" id="friend-list" data-bs-parent="#sidebar-menu">
+                        <ul class="sub-nav collapse @(controller == "Friend" ? "show" : "")" id="friend-list" data-bs-parent="#sidebar-menu">
                             <li class="nav-item">
-                                <a class="nav-link gap-1 "
-                                   href="friend-list.html">
+                                <a asp-area="User" asp-controller="Friend" asp-action="List" 
+                                class="nav-link gap-1 @(controller == "Friend" && action == "List" ? active : "")">
                                     <i class="ph-fill ph-circle icons-size"></i>
                                     <i class="sidenav-mini-icon"> FL </i>
-                                    <span class="item-name"> Friend List</span>
+                                    <span class="item-name"> All Friends</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link gap-1 "
-                                   href="friend-profile.html">
+                                <a asp-area="User" asp-controller="Friend" asp-action="Requests" 
+                                class="nav-link gap-1  @(controller == "Friend" && action == "Requests" ? active : "")">
                                     <i class="ph-fill ph-circle icons-size"></i>
                                     <i class="sidenav-mini-icon"> FP </i>
-                                    <span class="item-name">Friend Profile</span>
+                                    <span class="item-name">Friend Requests</span>
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link gap-1 " aria-current="page"
-                                   href="friend-request.html">
+                                <a asp-area="User" asp-controller="Friend" asp-action="Suggestions"
+                                class="nav-link gap-1  @(controller == "Friend" && action == "Suggestions" ? active : "")" aria-current="page">
                                     <i class="ph-fill ph-circle icons-size"></i>
                                     <i class="sidenav-mini-icon"> FR </i>
-                                    <span class="item-name">Friend Request</span>
+                                    <span class="item-name">Suggestions</span>
                                 </a>
                             </li>
                         </ul>
@@ -1830,10 +1833,12 @@
         </div>
     </div>
 
-
+    <!--cropper-->
+    <script src="https://unpkg.com/cropperjs@1.6.1/dist/cropper.min.js"></script>
+    <!-- Sweet-alert Script -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <!--Jquery-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="~/html/assets/js/ProfilePage.js"></script>
     <!-- Backend Bundle JavaScript -->
     <script src="~/html/assets/js/libs.min.js"></script>
     <!-- Lodash Utility -->
@@ -1850,9 +1855,6 @@
     <script src="~/html/assets/js/masonry.pkgd.min.js"></script>
     <!-- SweetAlert JavaScript -->
     <script src="~/html/assets/js/enchanter.js"></script>
-    <!-- Sweet-alert Script -->
-    <script src="~/html/assets/vendor/sweetalert2/dist/sweetalert2.min.js" async></script>
-    <script src="~/html/assets/js/sweet-alert.js" defer></script>
     <!-- Chart Custom JavaScript -->
     <!-- app JavaScript -->
     <script src="~/html/assets/js/charts/weather-chart.js"></script>
@@ -1873,6 +1875,8 @@
     <script src="~/html/assets/vendor/zuck.js-master/dist/zuck.min.js"></script>
     <script src="~/html/assets/vendor/zuck.js-master/demo/script.js"></script>
     <script src="~/html/assets/js/zuck.js"></script>
+
+    <script src="~/html/assets/js/ProfilePage.js"></script>
     @RenderSection("Scripts", required: false)
 
 </body>

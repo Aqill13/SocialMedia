@@ -38,6 +38,7 @@
     <Folder Include="Areas\Admin\Views\" />
     <Folder Include="Areas\User\Data\" />
     <Folder Include="Hubs\" />
+    <Folder Include="wwwroot\uploads\posts\" />
   </ItemGroup>
 
 </Project>

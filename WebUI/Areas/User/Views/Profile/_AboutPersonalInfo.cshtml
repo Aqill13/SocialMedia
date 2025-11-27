@@ -19,137 +19,178 @@
     <div class="row">
         <!-- First Column -->
         <div class="col-md-6">
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Bio) && user.UserProfileInfo?.Bio != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Bio))
             {
                 <div class="mb-3">
                     <h5>About Me:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.Bio</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.Bio == null ? "text-warning" : "")" id="profileInfoBioText">
+                        @(user.UserProfileInfo?.Bio ?? "No information entered")</p>
                 </div>
             }
             <div class="mb-3">
                 <h5>Email:</h5>
-                <p class="mb-0">@user.Email</p>
+                <p class="mb-0" id="profileInfoEmailText">@user.Email</p>
             </div>
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.PhoneNumber) && user.PhoneNumber != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.PhoneNumber))
             {
                 <div class="mb-3">
                     <h5>Mobile:</h5>
-                    <p class="mb-0">@user.PhoneNumber</p>
+                    <p class="mb-0 @(user.PhoneNumber == null ? "text-warning" : "")" id="profileInfoPhoneNumberText">
+                        @(user.PhoneNumber ?? "No information entered")</p>
                 </div>
             }
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Location) && user.UserProfileInfo?.Location != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Location))
             {
                 <div class="mb-3">
                     <h5>Location:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.Location</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.Location == null ? "text-warning" : "")" id="profileInfoLocationText">
+                        @(user.UserProfileInfo?.Location ?? "No information entered")</p>
                 </div>
             }
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.BirthDate) && user.UserProfileInfo?.BirthDate != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.BirthDate))
             {
                 <div class="mb-3">
                     <h5>Birth Date:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.BirthDate?.ToString("d")</p>
-                </div>
-            }
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Birthplace) && user.UserProfileInfo?.Birthplace != null)
-            {
-                <div class="mb-3">
-                    <h5>Birthplace:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.Birthplace</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.BirthDate == null ? "text-warning" : "")" id="profileInfoBirthDateText">
+                        @(user.UserProfileInfo?.BirthDate?.ToString("dd/MM/yyyy") ?? "No information entered")</p>
                 </div>
             }
         </div>
         <!-- Second Column -->
         <div class="col-md-6">
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.LivesIn) && user.UserProfileInfo?.LivesIn != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Birthplace))
+            {
+                <div class="mb-3">
+                    <h5>Birthplace:</h5>
+                    <p class="mb-0 @(user.UserProfileInfo?.Birthplace == null ? "text-warning" : "")" id="profileInfoBirthplaceText">
+                        @(user.UserProfileInfo?.Birthplace ?? "No information entered")
+                    </p>
+                </div>
+            }
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.LivesIn))
             {
                 <div class="mb-3">
                     <h5>Lives In:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.LivesIn</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.LivesIn == null ? "text-warning" : "")" id="profileInfoLivesInText">
+                        @(user.UserProfileInfo?.LivesIn ?? "No information entered")</p>
                 </div>
             }
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Gender) && user.UserProfileInfo?.Gender != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Gender))
             {
                 <div class="mb-3">
                     <h5>Gender:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.Gender</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.Gender == null ? "text-warning" : "")" id="profileInfoGenderText">
+                        @(user.UserProfileInfo?.Gender ?? "No information entered")</p>
                 </div>
             }
-            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Status) && user.UserProfileInfo?.Status != null)
+            @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Status))
             {
                 <div class="mb-3">
                     <h5>Status:</h5>
-                    <p class="mb-0">@user.UserProfileInfo?.Status</p>
+                    <p class="mb-0 @(user.UserProfileInfo?.Status == null ? "text-warning" : "")" id="profileInfoStatusText">
+                        @(user.UserProfileInfo?.Status ?? "No information entered")</p>
                 </div>
             }
             <div class="mb-3">
                 <h5>Joined:</h5>
-                <p class="mb-0">@user.CreatedAt.ToString("d")</p>
+                <p class="mb-0">@user.CreatedAt.ToString("dd/MM/yyyy")</p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="tab-pane fade" id="profileInfoEditTab">
-    <div class="top-box d-flex justify-content-between align-items-center">
-        <h4>Edit - Personal Info</h4>
-        <button type="button" class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-danger section-cancel-btn"
-                data-view="#profileInfoViewTab" data-edit="#profileInfoEditTab">
-            <i class="fa-solid fa-arrow-left"></i>
-        </button>
+@if (Model.IsOwner)
+{
+    <div class="tab-pane fade" id="profileInfoEditTab">
+        <div class="top-box d-flex justify-content-between align-items-center">
+            <h4>Edit - Personal Info</h4>
+            <button type="button" class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-danger section-cancel-btn"
+                    data-view="#profileInfoViewTab" data-edit="#profileInfoEditTab">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+        <hr>
+
+        <form asp-area="User" asp-controller="Profile" asp-action="UpdateProfileInfo" id="profileInfoForm" asp-antiforgery="true" method="post">
+            <div class="row">
+                <!-- First Column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">About Me</label>
+                        <textarea name="Bio" class="form-control" style="max-height: 123px; height: 123px" placeholder="Write something about yourself">@user.UserProfileInfo?.Bio</textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Birth Date</label>
+                        <input name="BirthDate" class="form-control" type="date"
+                               value="@(user.UserProfileInfo?.BirthDate?.ToString("yyyy-MM-dd"))" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Address</label>
+                        <input name="Location" class="form-control" type="text" value="@user.UserProfileInfo?.Location" placeholder="Enter your address." />
+                    </div>
+                </div>
+
+                <!-- Second Column -->
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <label class="form-label">Birthplace</label>
+                        <input name="Birthplace" class="form-control" placeholder="Write your place of birth" type="text" value="@user.UserProfileInfo?.Birthplace" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Lives In</label>
+                        <input name="LivesIn" class="form-control" placeholder="City, Country" type="text" value="@user.UserProfileInfo?.LivesIn" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Gender</label>
+                        <select name="Gender" class="form-select">
+                            <option value="">Select gender</option>
+                            <option value="Male" selected="@(user.UserProfileInfo?.Gender == "Male")">Male</option>
+                            <option value="Female" selected="@(user.UserProfileInfo?.Gender == "Female")">Female</option>
+                            <option value="Other" selected="@(user.UserProfileInfo?.Gender == "Other")">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Status</label>
+                        <div class="d-flex gap-4">
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="statusSingle" type="radio" name="Status" value="Single"
+                                           @(user.UserProfileInfo?.Status == "Single" ? "checked" : "")>
+                                    <label class="form-check-label" for="statusSingle">Single</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" id="statusMarried" type="radio" name="Status" value="Married"
+                                           @(user.UserProfileInfo?.Status == "Married" ? "checked" : "")>
+                                    <label class="form-check-label" for="statusMarried">Married</label>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="statusRelationship" type="radio" name="Status" value="In a relationship"
+                                           @(user.UserProfileInfo?.Status == "In a relationship" ? "checked" : "")>
+                                    <label class="form-check-label" for="statusRelationship">In a relationship</label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input class="form-check-input" id="statusPrefer" type="radio" name="Status" value="Prefer not to say"
+                                           @(user.UserProfileInfo?.Status == "Prefer not to say" ? "checked" : "")>
+                                    <label class="form-check-label" for="statusPrefer">Prefer not to say</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-end gap-2 mt-3">
+                <button type="button" class="btn btn-outline-secondary section-cancel-btn" data-view="#profileInfoViewTab" data-edit="#profileInfoEditTab">Cancel</button>
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+        </form>
     </div>
-    <hr>
-
-    <form asp-action="UpdateProfileInfo" method="post">
-        <div class="row">
-            <!-- First Column -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Birth Date</label>
-                    <input name="BirthDate" class="form-control" type="date" 
-                           value="@(user.UserProfileInfo?.BirthDate?.ToString("yyyy-MM-dd"))" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Location</label>
-                    <input name="Location" class="form-control" type="text" value="@user.UserProfileInfo?.Location" placeholder="City, Country" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Birthplace</label>
-                    <input name="Birthplace" class="form-control" type="text" value="@user.UserProfileInfo?.Birthplace" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Lives In</label>
-                    <input name="LivesIn" class="form-control" type="text" value="@user.UserProfileInfo?.LivesIn" />
-                </div>
-            </div>
-
-            <!-- Second Column -->
-            <div class="col-md-6">
-                <div class="mb-3">
-                    <label class="form-label">Gender</label>
-                    <select name="Gender" class="form-select">
-                        <option value="">Select...</option>
-                        <option value="Male" selected="@(user.UserProfileInfo?.Gender == "Male")">Male</option>
-                        <option value="Female" selected="@(user.UserProfileInfo?.Gender == "Female")">Female</option>
-                        <option value="Other" selected="@(user.UserProfileInfo?.Gender == "Other")">Other</option>
-                    </select>
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label">Status</label>
-                    <input name="Status" class="form-control" type="text" value="@user.UserProfileInfo?.Status" placeholder="e.g. Feeling good ✨" />
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">About Me</label>
-                    <textarea name="Bio" class="form-control" style="max-height: 123px; height: 123px" placeholder="Write something about yourself" >@user.UserProfileInfo?.Bio</textarea>
-                </div>
-            </div>
-        </div>
-
-        <div class="d-flex justify-content-end gap-2 mt-3">
-            <button type="button" class="btn btn-outline-secondary section-cancel-btn" data-view="#profileInfoViewTab" data-edit="#profileInfoEditTab">Cancel</button>
-            <button type="submit" class="btn btn-primary">Save changes</button>
-        </div>
-    </form>
-</div>
+}

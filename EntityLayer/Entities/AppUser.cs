@@ -11,8 +11,8 @@ namespace EntityLayer.Entities
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string? ImageUrl { get; set; }
-        public string? CoverImageUrl { get; set; }
+        public string? ImageUrl { get; set; } = "/uploads/profilep/default-profile-account.jpg";
+        public string? CoverImageUrl { get; set; } = "/uploads/cover/default-cover-img.png";
         public bool IsPrivate { get; set; }
         public bool IsOnline { get; set; }
         public DateTime? LastActive { get; set; }

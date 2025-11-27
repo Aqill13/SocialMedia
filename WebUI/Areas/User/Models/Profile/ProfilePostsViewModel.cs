@@ -5,6 +5,5 @@ namespace WebUI.Areas.User.Models.Profile
     public class ProfilePostsViewModel : ProfileBaseViewModel
     {
         public List<Post> Posts { get; set; }
-        public bool IsOwner { get; set; }
     }
 }

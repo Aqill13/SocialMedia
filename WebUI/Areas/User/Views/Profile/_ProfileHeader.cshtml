@@ -8,6 +8,7 @@
     var isOwner = Model.IsOwner;
     var totalSocialLinks = Enum.GetValues(typeof(SocialPlatform)).Length;
     var usedPlatforms = new HashSet<SocialPlatform>(links.Select(x => x.Platform));
+    var hasCustomImage = !string.IsNullOrEmpty(user.ImageUrl) && !user.ImageUrl.Contains("default-profile-account");
 }
 <style>
     .social-data-block li i {
@@ -52,10 +53,34 @@
                     <div class="header-avatar position-relative d-inline-block">
                         @if (isOwner)
                         {
-                            <span id ="headerProfileImgBtn" class="change-profile-image bg-primary rounded-pill d-flex flex-column justify-content-center align-items-center cursor-pointer"
-                                  data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="Change the profile image">
-                                <i class="ph ph-camera fs-5 text-white" onclick="document.getElementById('imageUploadInp').click()"></i>
-                            </span>
+                            <div class="dropdown">
+                                <span class="change-profile-image bg-primary rounded-pill d-flex flex-column justify-content-center align-items-center cursor-pointer"
+                                      id="avatarMenuToggle"
+                                      data-bs-toggle="dropdown"
+                                      aria-expanded="false">
+                                    <i class="ph ph-camera fs-5 text-white"></i>
+                                </span>
+
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarMenuToggle">
+                                    <li>
+                                        <button class="dropdown-item"
+                                                type="button"
+                                                onclick="document.getElementById('imageUploadInp').click()">
+                                            <span id="profileImageMenuText">
+                                                @(hasCustomImage ? "Change photo" : "Add photo")
+                                            </span>
+                                        </button>
+                                    </li>
+                                    <li id="profileImageRemoveItem" class="@(hasCustomImage ? "" : "d-none")">
+                                        <hr class="dropdown-divider" />
+                                        <button class="dropdown-item text-danger"
+                                                type="button"
+                                                onclick="deleteProfileImage()">
+                                            Remove photo
+                                        </button>
+                                    </li>
+                                </ul>
+                            </div>
                             <input type="file" id="imageUploadInp" onchange="openCropperModal(event)" class="d-none" />
                         }
                         <img src="@user.ImageUrl" alt="user" id="headerProfileImg"
@@ -131,10 +156,10 @@
                 <div class="col-lg-4 profile-right text-lg-end text-center mt-3 mt-lg-0">
                     @if (isOwner)
                     {
-                        <button class="btn btn-outline-secondary rounded-3 fs-6">
+                        <a asp-area="User" asp-controller="Profile" asp-action="EditProfile" class="btn btn-outline-secondary rounded-3 fs-6">
                             <i class="fa-solid fa-pen-to-square me-2"></i>
                             Edit profile
-                        </button>
+                        </a>
                     }
                     else
                     {
@@ -171,6 +196,7 @@
     }
 </div>
 
+<!--Add social media modal-->
 <div class="modal fade" id="addSocialLinkModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -213,6 +239,7 @@
     </div>
 </div>
 
+<!--Profile img update modal-->
 <div class="modal fade" id="profileImageCropModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -231,6 +258,31 @@
             <div class="modal-footer">
                 <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                 <button class="btn btn-primary" onclick="uploadCroppedProfileImage()">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!--Cover img update modal-->
+<div class="modal fade" id="coverImageCropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adjust cover image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="cropper-container-wrapper" style="max-height:400px; overflow:hidden;">
+                    <img id="coverImageCropTarget" src="" style="max-width:100%; display:block;">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="uploadCroppedCoverImage()">Save</button>
             </div>
 
         </div>

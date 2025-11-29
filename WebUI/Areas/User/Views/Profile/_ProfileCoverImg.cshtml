@@ -1,14 +1,42 @@
 ﻿@model ProfileBaseViewModel
+@{
+    var user = Model.ProfileUser;
+    var hasCustomImage = !string.IsNullOrEmpty(user.CoverImageUrl) && !user.CoverImageUrl.Contains("default-cover-img");
+}
 
 <div class="container position-relative p-0">
     <div class="header-cover-img">
         @if (Model.IsOwner)
         {
-            <span id="headerProfileCoverImgBtn" class="bg-primary rounded-pill cursor-pointer" data-bs-toggle="tooltip" data-bs-placement="left" data-bs-title="Change the cover image">
-                <i class="ph ph-camera fs-5 text-white" onclick="document.getElementById('imageUploadInp').click()"></i>
-            </span>
-            <input type="file" id="imageUploadInp" onchange="openCropperModal(event)" class="d-none" />
+            <div class="dropdown">
+                <span id="headerProfileCoverImgBtn" class="change-cover-image bg-primary rounded-pill d-flex flex-column justify-content-center align-items-center cursor-pointer"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                    <i class="ph ph-camera fs-5 text-white"></i>
+                </span>
+
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="headerProfileCoverImgBtn">
+                    <li>
+                        <button class="dropdown-item"
+                                type="button"
+                                onclick="document.getElementById('coverImageUploadInp').click()">
+                            <span id="coverImageMenuText">
+                                @(hasCustomImage ? "Change photo" : "Add photo")
+                            </span>
+                        </button>
+                    </li>
+                    <li id="coverImageRemoveItem" class="@(hasCustomImage ? "" : "d-none")">
+                        <hr class="dropdown-divider" />
+                        <button class="dropdown-item text-danger"
+                                type="button"
+                                onclick="deleteCoverImage()">
+                            Remove photo
+                        </button>
+                    </li>
+                </ul>
+            </div>
+            <input type="file" id="coverImageUploadInp" onchange="openCoverImgCropperModal(event)" class="d-none" />
         }
-        <img src="@Model.ProfileUser.CoverImageUrl" alt="cover img" />
+        <img src="@Model.ProfileUser.CoverImageUrl" id="headerCoverImg" alt="cover img" />
     </div>
 </div>

@@ -557,10 +557,9 @@ $(document).on("submit", "#addSocialLinkForm", function (e) {
     })
 })
 
-// Profile Picture Update
+// Profile Photo Update
 
-    let cropper;
-
+let cropper;
 function openCropperModal(event) {
     const file = event.target.files[0];
     if (!file) return;
@@ -597,14 +596,12 @@ function openCropperModal(event) {
         document.getElementById("imageUploadInp").value = "";
     });
 }
-
 function uploadCroppedProfileImage() {
     if (!cropper) return;
 
-    // 130x130 canvas al
     const canvas = cropper.getCroppedCanvas({
-        width: 130,
-        height: 130
+        width: 300,
+        height: 300
     });
 
     canvas.toBlob(function (blob) {
@@ -623,10 +620,125 @@ function uploadCroppedProfileImage() {
                     $("#headerProfileImg").attr("src", newSrc);
                     $("#profileImageCropModal").modal("hide");
                     toast("success", res.message);
+                    $("#profileImageMenuText").text("Change photo");
+                    $("#profileImageRemoveItem").removeClass("d-none");
+                }
+                else {
+                    toast("error", res.message || "Profile image update failed");
+                }
+            }
+        });
+    }, 'image/png',0.9);
+}
+
+// Remove Profile Image
+$(document).on("click", "#profileImageRemoveItem", function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/User/Profile/RemoveProfileImage',
+        type: 'POST',
+        success: function (res) {
+            if (res && res.success) {
+                const newSrc = res.imageUrl + '?v=' + new Date().getTime();
+                $("#headerProfileImg").attr("src", newSrc);
+                toast("success", res.message);
+                $("#profileImageMenuText").text("Add photo");
+                $("#profileImageRemoveItem").addClass("d-none");
+            }
+            else {
+                toast("error", res.message || "Profile image removal failed");
+            }
+        }
+    });
+});
+
+// Cover Photo Update
+let coverCropper;
+function openCoverImgCropperModal(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const img = document.getElementById("coverImageCropTarget");
+    img.src = URL.createObjectURL(file);
+
+    const modalEl = document.getElementById('coverImageCropModal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    modalEl.addEventListener('shown.bs.modal', function handler() {
+        if (coverCropper) {
+            coverCropper.destroy();
+        }
+
+        coverCropper = new Cropper(img, {
+            aspectRatio: 4/1,        
+            viewMode: 1,
+            autoCropArea: 1,
+            background: false,
+            movable: true,
+            zoomable: true,
+            scalable: false,
+            rotatable: false
+        });
+        modalEl.removeEventListener('shown.bs.modal', handler);
+    });
+    modalEl.addEventListener('hidden.bs.modal', function () {
+        if (coverCropper) {
+            coverCropper.destroy();
+            coverCropper = null;
+        }
+        document.getElementById("coverImageUploadInp").value = "";
+    });
+}
+function uploadCroppedCoverImage() {
+    if (!coverCropper) return;
+
+    const canvas = coverCropper.getCroppedCanvas({
+        width: 1200,
+        height: 300
+    });
+
+    canvas.toBlob(function (blob) {
+        let formData = new FormData();
+        formData.append('file', blob, 'avatar.png');
+
+        $.ajax({
+            url: '/User/Profile/ChangeCoverImage',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res && res.success) {
+                    const newSrc = res.imageUrl + '?v=' + new Date().getTime();
+                    $("#headerCoverImg").attr("src", newSrc);
+                    $("#coverImageCropModal").modal("hide");
+                    toast("success", res.message);
+                    $("#coverImageMenuText").text("Change photo");
+                    $("#coverImageRemoveItem").removeClass("d-none");
                 }
             }
         });
     }, 'image/png');
 }
 
-
+// Remove Cover Image
+$(document).on("click", "#coverImageRemoveItem", function (e) {
+    e.preventDefault();
+    $.ajax({
+        url: '/User/Profile/RemoveCoverImage',
+        type: 'POST',
+        success: function (res) {
+            if (res && res.success) {
+                const newSrc = res.imageUrl + '?v=' + new Date().getTime();
+                $("#headerCoverImg").attr("src", newSrc);
+                toast("success", res.message);
+                $("#coverImageMenuText").text("Add photo");
+                $("#coverImageRemoveItem").addClass("d-none");
+            }
+            else {
+                toast("error", res.message || "Cover image removal failed");
+            }
+        }
+    });
+});

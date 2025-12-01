@@ -216,7 +216,7 @@ namespace WebUI.Areas.User.Controllers
             return Json(new
             {
                 success = true,
-                message = "Hobbies and interests updated successfully.",
+                message = "Hobbies and interests updated successfully",
                 data = new
                 {
                     hobbies = profileInfo.Hobbies,
@@ -598,6 +598,10 @@ namespace WebUI.Areas.User.Controllers
                 }
                 currentUser.ImageUrl = "/uploads/profilep/" + newFileName;
             }
+            else if (model.DeleteProfileImage)
+            {
+                currentUser.ImageUrl = "/uploads/profilep/default-profile-account.jpg";
+            }
             if (model.CoverImageFile != null && model.CoverImageFile.Length > 0)
             {
                 var newFileName = Guid.NewGuid() + ".png";
@@ -607,6 +611,10 @@ namespace WebUI.Areas.User.Controllers
                     await model.CoverImageFile.CopyToAsync(stream);
                 }
                 currentUser.CoverImageUrl = "/uploads/cover/" + newFileName;
+            }
+            else if (model.DeleteCoverImage)
+            {
+                currentUser.CoverImageUrl = "/uploads/cover/default-cover-img.png";
             }
             await _userManager.UpdateAsync(currentUser);
             // Delete old images if changed
@@ -638,12 +646,27 @@ namespace WebUI.Areas.User.Controllers
             profileInfo.LivesIn = model.LivesIn;
             profileInfo.Status = model.Status;
             profileInfo.Gender = model.Gender;
-            profileInfo.Hobbies = model.Hobbies;
-            profileInfo.FavoriteMovies = model.FavoriteMovies;
-            profileInfo.FavoriteGames = model.FavoriteGames;
-            profileInfo.FavoriteBooks = model.FavoriteBooks;
             await _userProfileInfoService.UpdateAsync(profileInfo);
-            return View();
+            return Json(new
+            {
+                success = true,
+                message = "Profile updated successfully",
+                data = new
+                {
+                    bio = profileInfo.Bio,
+                    location = profileInfo.Location,
+                    birthDate = profileInfo.BirthDate?.ToString("yyyy-MM-dd"),
+                    birthplace = profileInfo.Birthplace,
+                    livesIn = profileInfo.LivesIn,
+                    status = profileInfo.Status,
+                    gender = profileInfo.Gender,
+                    firstName = currentUser.FirstName,
+                    lastName = currentUser.LastName,
+                    phoneNumber = currentUser.PhoneNumber,
+                    imageUrl = currentUser.ImageUrl,
+                    coverImageUrl = currentUser.CoverImageUrl
+                }
+            });
         }
     }
 }

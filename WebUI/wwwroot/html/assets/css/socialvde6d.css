@@ -2246,6 +2246,14 @@ progress {
     color: var(--bs-table-color);
     border-color: var(--bs-table-border-color)
 }
+input:focus,
+textarea:focus,
+select:focus,
+button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 
 .table-dark {
     --bs-table-color: #fff;
@@ -5108,9 +5116,7 @@ textarea.form-control-lg {
             border-bottom-left-radius: var(--bs-accordion-border-radius)
         }
 
-.accordion-body {
-    padding: var(--bs-accordion-body-padding-y) var(--bs-accordion-body-padding-x)
-}
+
 
 .accordion-flush > .accordion-item {
     border-right: 0;
@@ -7380,7 +7386,7 @@ textarea.form-control-lg {
 #page_layout .container .header-cover-img img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+/*    object-fit: cover;*/
 }
 
 .offcanvas.show:not(.hiding), .offcanvas.showing {
@@ -15103,9 +15109,57 @@ textarea.form-control-lg {
     transition: all .3s ease-in-out
 }
 
-    .iq-top-navbar .sub-drop .card-body div {
-        border-radius: 5px 5px 0 0
+@media (max-width: 768px) {
+    #editProfilePageImgsBox {
+        flex-direction: column;
+        gap: 10px;
     }
+
+        #editProfilePageImgsBox .cover-img {
+            width: 100%;
+        }
+}
+/* PROFILE IMG */
+#editProfilePageImgsBox .profile-img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border: 2px solid white;
+    border-radius: 12px;
+}
+
+/* COVER IMG */
+#editProfilePageImgsBox .cover-img {
+    height: 150px; 
+    width: 350px; 
+    border: 2px solid white;
+    border-radius: 12px;
+}
+
+/* EDIT ICON OVERLAY */
+#editProfilePageImgsBox .profile-img-edit,
+#editProfilePageImgsBox .cover-img-edit {
+    position: relative;
+}
+
+#editProfilePageImgsBox .p-image {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: var(--bs-primary);
+    color: white;
+    padding: 8px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+    #editProfilePageImgsBox .p-image input {
+        display: none;
+    }
+
+.iq-top-navbar .sub-drop .card-body div {
+    border-radius: 5px 5px 0 0
+}
 
     .iq-top-navbar .sub-drop .header-title {
         line-height: normal
@@ -23974,15 +24028,14 @@ button.close-popup {
 
 .accordion-item {
     background-color: var(--bs-gray-900);
-    padding: 40px;
-    margin-bottom: 32px
+    padding: 26.25px;
 }
 
     .accordion-item .accordion-button {
         padding: 0;
         border: 0;
         background: inherit;
-        font-size: 20px;
+        font-size: 17.5px;
         font-weight: 500;
         color: var(--bs-heading-color)
     }
@@ -23990,7 +24043,7 @@ button.close-popup {
         .accordion-item .accordion-button::after {
             content: "\e13a";
             font-family: Phosphor-Bold !important;
-            background: var(--bs-primary);
+    /*            background: var(--bs-primary);*/
             color: var(--bs-white);
             font-size: 18px;
             height: 30px;

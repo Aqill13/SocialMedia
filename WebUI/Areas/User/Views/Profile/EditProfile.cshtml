@@ -1,7 +1,12 @@
-﻿@{
-    ViewData["Title"] = "EditProfile";
+﻿@model ProfileEditViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
     Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+    var hasCustomImageProfile = !string.IsNullOrEmpty(Model.ImageUrl) && !Model.ImageUrl.Contains("default-profile-account");
+    var hasCustomImageCover = !string.IsNullOrEmpty(Model.CoverImageUrl) && !Model.CoverImageUrl.Contains("default-cover-img");
 }
+
+
 <div>
     <div class="position-relative">
     </div>
@@ -11,108 +16,293 @@
                 <div class="col-sm-12">
                     <div class="iq-edit-list-data">
                         <div class="tab-content">
-                            <div class="tab-pane fade active show" id="personal-information" role="tabpanel">
+                            <div class="tab-pane fade active show" id="personal-information">
                                 <div class="card">
-                                    <div class="card-header d-flex justify-content-between">
-                                        <div class="header-title">
-                                            <h4 class="card-title">Personal Information</h4>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <form>
-                                            <div class="form-group row align-items-center">
-                                                <div class="col-md-12">
-                                                    <div class="profile-img-edit">
-                                                        <img class="profile-pic" src="~/html/assets/images/user/11.png" alt="profile-pic"
-                                                             loading="lazy">
-                                                        <div class="p-image d-flex align-items-center justify-content-center">
-                                                            <i class="ph ph-pencil-simple-line fs-2"></i>
-                                                            <input class="file-upload" type="file" accept="image/*" />
+                                    <div class="accordion" id="accordionPanelsStayOpenExample">
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                                    Basic Information
+                                                </button>
+                                            </h4>
+                                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                                <div class="card-body" style="padding-left: 0; padding-right: 0; padding-bottom: 0">
+                                                    <form id="editProfileBasicInfoForm" asp-area="User" asp-controller="Profile" asp-action="EditProfile" asp-antiforgery="true" enctype="multipart/form-data">
+                                                        <div class="form-group row">
+                                                            <div class="col-md-12 d-flex align-items-center justify-content-between" id="editProfilePageImgsBox">
+                                                                <div class="profile-img-edit">
+                                                                    <img class="profile-img" id="editProfileProfileImg" src="@Model.ImageUrl" alt="profile-pic"
+                                                                         loading="lazy">
+                                                                    <div class="p-image d-flex align-items-center justify-content-center"
+                                                                         id="editProfileProfileImgToggle"
+                                                                         data-bs-toggle="dropdown">
+                                                                        <i class="ph ph-pencil-simple-line fs-2"></i>
+                                                                    </div>
+                                                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="editProfileProfileImgToggle">
+                                                                        <li>
+                                                                            <button class="dropdown-item"
+                                                                                    type="button"
+                                                                                    onclick="document.getElementById('imageUploadInp').click()">
+                                                                                <span id="editProfileImageMenuText">
+                                                                                    @(hasCustomImageProfile ? "Change photo" : "Add photo")
+                                                                                </span>
+                                                                            </button>
+                                                                        </li>
+                                                                        <li id="editProfileImageRemoveItem" class="@(hasCustomImageProfile ? "" : "d-none")">
+                                                                            <hr class="dropdown-divider" />
+                                                                            <button class="dropdown-item text-danger"
+                                                                                    type="button"
+                                                                                    onclick="editProfileDeleteProfileImage()">
+                                                                                Remove photo
+                                                                            </button>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <input asp-for="ProfileImageFile" type="file" id="imageUploadInp" onchange="openCropperModal(event)" class="d-none" />
+
+                                                                </div>
+                                                                <div class="cover-img-edit">
+                                                                    <img class="cover-img" id="editProfileCoverImg" src="@Model.CoverImageUrl" alt="profile-pic"
+                                                                         loading="lazy">
+                                                                    <div class="p-image d-flex align-items-center justify-content-center"
+                                                                         id="editProfileCoverImgToggle"
+                                                                         data-bs-toggle="dropdown">
+                                                                        <i class="ph ph-pencil-simple-line fs-2"></i>
+                                                                    </div>
+                                                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="editProfileCoverImgToggle">
+                                                                        <li>
+                                                                            <button class="dropdown-item"
+                                                                                    type="button"
+                                                                                    onclick="document.getElementById('coverImageUploadInp').click()">
+                                                                                <span id="editProfileCoverImageMenuText">
+                                                                                    @(hasCustomImageCover ? "Change photo" : "Add photo")
+                                                                                </span>
+                                                                            </button>
+                                                                        </li>
+                                                                        <li id="editProfileCoverImageRemoveItem" class="@(hasCustomImageCover ? "" : "d-none")">
+                                                                            <hr class="dropdown-divider" />
+                                                                            <button class="dropdown-item text-danger"
+                                                                                    type="button"
+                                                                                    onclick="editProfileDeleteCoverImage()">
+                                                                                Remove photo
+                                                                            </button>
+                                                                        </li>
+                                                                    </ul>
+                                                                    <input asp-for="CoverImageFile" type="file" id="coverImageUploadInp" onchange="openCoverImgCropperModal(event)" class="d-none" />
+                                                                </div>
+                                                            </div>
+                                                            <input asp-for="DeleteProfileImage" type="hidden" id="deleteProfileImageFlag" />
+                                                            <input asp-for="DeleteCoverImage" type="hidden" id="deleteCoverImageFlag" />
+
                                                         </div>
+                                                        <div class=" row align-items-center">
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">First Name:</label>
+                                                                <input asp-for="FirstName" type="text" id="editProfileFirstnameInp" class="form-control" placeholder="Write your name">
+                                                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Last Name:</label>
+                                                                <input asp-for="LastName" type="text" id="editProfileLastnameInp" class="form-control" placeholder="Write your lastname">
+                                                                <span asp-validation-for="LastName" class="text-danger"></span>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Birthdate:</label>
+                                                                <input asp-for="BirthDate" id="editProfileBirthDateInp" type="date" class="form-control">
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Birthplace:</label>
+                                                                <input asp-for="Birthplace" id="editProfileBirthplaceInp" type="text" class="form-control" placeholder="Write your birthplace">
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Lives in:</label>
+                                                                <input asp-for="LivesIn" id="editProfileLivesInInp" type="text" class="form-control" placeholder="Write down where you live">
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Phone number:</label>
+                                                                <input asp-for="PhoneNumber" id="editProfilePhoneInp" type="text" class="form-control" placeholder="Enter your phone number">
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label d-block">Gender:</label>
+                                                                <select asp-for="Gender" class="form-select" id="editProfileGender">
+                                                                    <option value="">Select gender</option>
+                                                                    <option value="Male">Male</option>
+                                                                    <option value="Female">Female</option>
+                                                                    <option value="Other">Other</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Marital Status:</label>
+                                                                <select asp-for="Status" class="form-select" id="editProfileStatus">
+                                                                    <option value="Single">Single</option>
+                                                                    <option value="Married">Married</option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Address:</label>
+                                                                <textarea asp-for="Location" id="editProfileLocationInp" class="form-control" style="max-height:80px" placeholder="Write your address"></textarea>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">About me:</label>
+                                                                <textarea asp-for="Bio" id="editProfileBioInp" class="form-control" style="max-height:80px" placeholder="Write about yourself"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2 flex-wrap mt-3">
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                                                    Hobbies and Interests
+                                                </button>
+                                            </h4>
+                                            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                                                <div class="card-body" style="padding-left: 0; padding-right: 0; padding-bottom: 0">
+                                                    <form id="editProfileHobbiesForm" asp-area="User" asp-controller="Profile" asp-action="UpdateHobbiesAndInterests" asp-antiforgery="true" enctype="multipart/form-data">
+                                                        <div class=" row align-items-center">
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Hobbies:</label>
+                                                                <textarea asp-for="Hobbies" id="editProfileHobbiesInp" class="form-control" style="max-height:80px" placeholder="Write down your hobbies"></textarea>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Favorite Movies:</label>
+                                                                <textarea asp-for="FavoriteMovies" id="editProfileFavMoviesInp" class="form-control" style="max-height:80px" placeholder="Write your favorite movies"></textarea>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Favorite Games:</label>
+                                                                <textarea asp-for="FavoriteGames" id="editProfileFavGamesInp" class="form-control" style="max-height:80px" placeholder="Write your favorite games"></textarea>
+                                                            </div>
+                                                            <div class="form-group col-sm-6">
+                                                                <label class="form-label">Favorite Books:</label>
+                                                                <textarea asp-for="FavoriteBooks" id="editProfileFavBooksInp" class="form-control" style="max-height:80px" placeholder="Write your favorite books"></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center gap-2 flex-wrap mt-3">
+                                                            <button type="submit" class="btn btn-primary">Save</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h4 class="accordion-header">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                                                    Work and Education
+                                                </button>
+                                            </h4>
+                                            <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                                                <div class="card-body" style="padding-left:0; padding-right:0; padding-bottom:0">
+                                                    <!-- WORK EXPERIENCE -->
+                                                    <div class="mb-4">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <h5 class="mb-0">Work Experience</h5>
+                                                            <a class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#editProfileAddWorkModal" id="workAddBtn">
+                                                                <i class="ph ph-plus"></i>
+                                                            </a>
+                                                        </div>
+                                                        <ul id="editProfileWorkListUl" class="list-unstyled">
+
+                                                            @if (Model.WorkExperiences != null && Model.WorkExperiences.Any())
+                                                            {
+                                                                @foreach (var work in Model.WorkExperiences)
+                                                                {
+                                                                    <li id="workItem_@work.Id" data-work-id="@work.Id" class="border rounded-3 p-3 mb-2 d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <h6 class="work-company-text">@work.CompanyName</h6>
+                                                                            <p class="mb-0 text-muted work-position-text">@work.Position</p>
+                                                                            <p class="mb-0 text-muted work-date-text">
+                                                                                @work.StartDate.ToString("MMM yyyy") -
+                                                                                @(work.EndDate?.ToString("MMM yyyy") ?? "Present")
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <div class="edit-relation">
+                                                                            <a href="#" class="d-flex align-items-center gap-1 work-edit-btn"
+                                                                               data-id="@work.Id"
+                                                                               data-company="@work.CompanyName"
+                                                                               data-position="@work.Position"
+                                                                               data-start="@work.StartDate.ToString("yyyy-MM-dd")"
+                                                                               data-end="@(work.EndDate?.ToString("yyyy-MM-dd") ?? "")" data-bs-toggle="modal"
+                                                                               data-bs-target="#editProfileAddWorkModal">
+                                                                                <i class="ph ph-pencil-simple"></i>
+                                                                                <span class="edit-btn">Edit</span>
+                                                                            </a>
+                                                                            <a href="#" data-id="@work.Id" class="d-flex align-items-center gap-1 text-danger work-delete-btn mt-2">
+                                                                                <i class="ph ph-trash"></i>
+                                                                                <span class="delete-btn">Delete</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </li>
+                                                                }
+
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class="text-muted" id="workNoInfoText">No work experience added yet</li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    <!-- EDUCATION -->
+                                                    <div class="mb-4">
+                                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                                            <h5 class="mb-0">Education</h5>
+                                                            <a class="p-2 d-flex flex-column justify-content-center align-item-center btn btn-primary" id="educationAddBtn"
+                                                               data-bs-toggle="modal"
+                                                               data-bs-target="#editProfileAddEduModal">
+                                                                <i class="ph ph-plus"></i>
+                                                            </a>
+                                                        </div>
+                                                        <ul id="editProfileEduListUl" class="list-unstyled">
+
+                                                            @if (Model.Educations != null && Model.Educations.Any())
+                                                            {
+                                                                @foreach (var edu in Model.Educations)
+                                                                {
+                                                                    <li id="eduItem_@edu.Id" data-edu-id="@edu.Id" class="border rounded-3 p-3 mb-2 d-flex justify-content-between align-items-center">
+                                                                        <div>
+                                                                            <h6 class="edu-school-text">@edu.SchoolName</h6>
+                                                                            <p class="mb-0 text-muted edu-fielddegree-text">@edu.Degree · @edu.Field</p>
+
+                                                                            <p class="mb-0 text-muted edu-date-text">
+                                                                                @edu.StartDate.ToString("MMMM yyyy") -
+                                                                                @(edu.EndDate?.ToString("MMMM yyyy") ?? "Present")
+                                                                            </p>
+                                                                        </div>
+
+                                                                        <div class="edit-relation">
+                                                                            <a href="#" class="d-flex align-items-center gap-1 education-edit-btn"
+                                                                               data-id="@edu.Id"
+                                                                               data-school="@edu.SchoolName"
+                                                                               data-field="@edu.Field"
+                                                                               data-degree="@edu.Degree"
+                                                                               data-start="@edu.StartDate.ToString("yyyy-MM-dd")"
+                                                                               data-end="@(edu.EndDate?.ToString("yyyy-MM-dd") ?? "")" data-bs-toggle="modal"
+                                                                               data-bs-target="#editProfileAddEduModal">
+                                                                                <i class="ph ph-pencil-simple"></i>
+                                                                                <span class="edit-btn">Edit</span>
+                                                                            </a>
+                                                                            <a href="#" data-id="@edu.Id" class="d-flex align-items-center gap-1 text-danger edu-delete-btn mt-2">
+                                                                                <i class="ph ph-trash"></i>
+                                                                                <span class="delete-btn">Delete</span>
+                                                                            </a>
+                                                                        </div>
+                                                                    </li>
+                                                                }
+                                                            }
+                                                            else
+                                                            {
+                                                                <li class="text-muted" id="educationNoInfoText">No education added yet</li>
+                                                            }
+                                                        </ul>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class=" row align-items-center">
-                                                <div class="form-group col-sm-6">
-                                                    <label for="fname" class="form-label">First Name:</label>
-                                                    <input type="text" class="form-control" id="fname" placeholder="Bni">
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="lname" class="form-label">Last Name:</label>
-                                                    <input type="text" class="form-control" id="lname" placeholder="Jhon">
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="uname" class="form-label">User Name:</label>
-                                                    <input type="text" class="form-control" id="uname" placeholder="Bni@01">
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="cname" class="form-label">City:</label>
-                                                    <input type="text" class="form-control" id="cname" placeholder="Atlanta">
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label class="form-label d-block">Gender:</label>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                               id="inlineRadio10" value="option1">
-                                                        <label class="form-check-label" for="inlineRadio10"> Male</label>
-                                                    </div>
-                                                    <div class="form-check form-check-inline">
-                                                        <input class="form-check-input" type="radio" name="inlineRadioOptions"
-                                                               id="inlineRadio11" value="option1">
-                                                        <label class="form-check-label" for="inlineRadio11">Female</label>
-                                                    </div>
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label for="dob" class="form-label">Date Of Birth:</label>
-                                                    <input class="form-control" id="dob" placeholder="1984-01-24">
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label class="form-label">Marital Status:</label>
-                                                    <select class="form-select" aria-label="Default select example">
-                                                        <option selected="">Single</option>
-                                                        <option>Married</option>
-                                                        <option>Widowed</option>
-                                                        <option>Divorced</option>
-                                                        <option>Separated </option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label class="form-label">Age:</label>
-                                                    <select class="form-select" aria-label="Default select example 2">
-                                                        <option>46-62</option>
-                                                        <option>63 > </option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label class="form-label">Country:</label>
-                                                    <select class="form-select" aria-label="Default select example 3">
-                                                        <option>Caneda</option>
-                                                        <option>Noida</option>
-                                                        <option selected="">USA</option>
-                                                        <option>India</option>
-                                                        <option>Africa</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-sm-6">
-                                                    <label class="form-label">State:</label>
-                                                    <select class="form-select" aria-label="Default select example 4">
-                                                        <option>California</option>
-                                                        <option>Florida</option>
-                                                        <option selected="">Georgia</option>
-                                                        <option>Connecticut</option>
-                                                        <option>Louisiana</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-group col-sm-12">
-                                                    <label class="form-label">Address:</label>
-                                                    <textarea class="form-control" name="address" rows="5" style="line-height: 22px;">37 Cardinal Lane Petersburg, VA 23803 United States of AmericaZip Code: 85001 </textarea>
-                                                </div>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2 flex-wrap">
-                                                <button type="submit" class="btn btn-primary">Submit</button>
-                                                <button type="reset" class="btn btn-danger-subtle">Cancel</button>
-                                            </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -120,6 +310,148 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- WORK Add / Update Modal-->
+<div class="modal fade" id="editProfileAddWorkModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="workFormTitle">Add work experience</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-antiforgery="true" asp-area="User" asp-controller="Profile" asp-action="AddOrUpdateWorkExperience"
+                  id="workFormEditProfilePage" method="post">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <input type="hidden" name="Id" id="workId" />
+
+                        <div class="col-md-6">
+                            <label class="form-label">Company</label>
+                            <input type="text" name="CompanyName" id="workCompany" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Position</label>
+                            <input type="text" name="Position" id="workPosition" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Start date</label>
+                            <input type="date" name="StartDate" id="workStart" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">End date</label>
+                            <input type="date" name="EndDate" id="workEnd" class="form-control" />
+                            <small class="text-muted">Leave empty if you still study here.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- EDUCATION Add / Update Modal-->
+<div class="modal fade" id="editProfileAddEduModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="educationFormTitle">Add education</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <form asp-antiforgery="true" asp-area="User" asp-controller="Profile" asp-action="AddOrUpdateEducation"
+                  id="eduFormEditProfilePage" method="post">
+                <div class="modal-body">
+                    <div class="row g-3">
+                        <input type="hidden" name="Id" id="educationId" />
+
+                        <div class="col-md-12">
+                            <label class="form-label">School</label>
+                            <input type="text" name="SchoolName" id="educationSchool" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Field</label>
+                            <input type="text" name="Field" id="educationField" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Degree</label>
+                            <input type="text" name="Degree" id="educationDegree" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">Start date</label>
+                            <input type="date" name="StartDate" id="educationStart" class="form-control" />
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">End date</label>
+                            <input type="date" name="EndDate" id="educationEnd" class="form-control" />
+                            <small class="text-muted">Leave empty if you still study here.</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Profile Image Cropper Modal -->
+<div class="modal fade" id="profileImageCropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adjust profile image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="cropper-container-wrapper" style="max-height:400px; overflow:hidden;">
+                    <img id="profileImageCropTarget" src="" style="max-width:100%; display:block;">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="uploadCroppedProfileImageEditProfile()">Save</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Cover Image Cropper Modal -->
+<div class="modal fade" id="coverImageCropModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Adjust cover image</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+                <div class="cropper-container-wrapper" style="max-height:400px; overflow:hidden;">
+                    <img id="coverImageCropTarget" src="" style="max-width:100%; display:block;">
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-primary" onclick="uploadCroppedCoverImageEditProfile()">Save</button>
+            </div>
+
         </div>
     </div>
 </div>

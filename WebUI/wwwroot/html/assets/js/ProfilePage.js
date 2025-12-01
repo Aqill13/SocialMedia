@@ -340,9 +340,17 @@ $(document).on("click", ".work-delete-btn", function (e) {
                         toast("error", res.message || "Work experience deletion failed")
                         return;
                     }
-                    $(itemId).remove();
-                    if ($("#workList").children().length === 0) {
-                        $("#workList").html('<p id="workNoInfoText" class="text-warning">No information entered</p>');
+                    const item = $(itemId);
+                    item.remove();
+                    const aboutList = $("#workList");
+                    if (aboutList.length && aboutList.find("li[data-work-id]").length === 0) {
+                        if ($("#workNoInfoText").length === 0) {
+                            aboutList.append('<li class="text-warning" id="workNoInfoText">No information entered</li>');
+                        }
+                    }
+                    const editList = $("#editProfileWorkListUl");
+                    if (editList.length && editList.children("li").length === 0) {
+                        editList.html('<li class="text-muted" id="workNoInfoText">No work experience added yet</li>');
                     }
                     toast("success", res.message);
                 },
@@ -381,7 +389,7 @@ $(document).on("submit", "#educationForm", function (e) {
                 existingItem.find(".edu-date-text").text(dateText);
 
                 const editLink = existingItem.find(".education-edit-btn");
-                editLink.data("school", d.companyName);
+                editLink.data("school", d.schoolName);
                 editLink.data("field", d.field);
                 editLink.data("degree", d.degree);
                 editLink.data("start", d.startDateValue);
@@ -457,14 +465,22 @@ $(document).on("click", ".edu-delete-btn", function (e) {
                         toast("error", res.message || "Education deletion failed");
                         return;
                     }
-                    $(itemId).remove();
-                    if ($("#educationList").children().length === 0) {
-                        $("#educationList").html('<p id="educationNoInfoText" class="text-warning">No information entered</p>');
+                    const item = $(itemId);
+                    item.remove();
+                    const aboutList = $("#educationList");
+                    if (aboutList.length && aboutList.find("li[data-edu-id]").length === 0) {
+                        if ($("#educationNoInfoText").length === 0) {
+                            aboutList.append('<li class="text-warning" id="educationNoInfoText">No information entered</li>');
+                        }
+                    }
+                    const editList = $("#editProfileEduListUl");
+                    if (editList.length && editList.children("li").length === 0) {
+                        editList.html('<li class="text-muted" id="educationNoInfoText">No education added yet</li>');
                     }
                     toast("success", res.message);
                 },
                 error: function () {
-                    toast("error", "Could not delete work experience");
+                    toast("error", "Could not delete education");
                 }
             });
         }
@@ -515,9 +531,6 @@ $(document).on("change", "#visibilitySelect", function () {
         }
     });
 });
-
-
-
 
 
 // Add social link Modal
@@ -593,7 +606,8 @@ function openCropperModal(event) {
             cropper.destroy();
             cropper = null;
         }
-        document.getElementById("imageUploadInp").value = "";
+
+        //document.getElementById("imageUploadInp").value = "";
     });
 }
 function uploadCroppedProfileImage() {
@@ -687,7 +701,6 @@ function openCoverImgCropperModal(event) {
             coverCropper.destroy();
             coverCropper = null;
         }
-        document.getElementById("coverImageUploadInp").value = "";
     });
 }
 function uploadCroppedCoverImage() {
@@ -742,3 +755,312 @@ $(document).on("click", "#coverImageRemoveItem", function (e) {
         }
     });
 });
+
+
+
+
+// ------------------ EDIT PROFILE PAGE --------------------
+
+// PERSONAL INFO update
+$(document).on("submit", "#editProfileBasicInfoForm", function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+    $.ajax({
+        url: "/User/Profile/EditProfile",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Update failed");
+                return;
+            }
+            const d = res.data;
+            console.log(d);
+            $("#editProfileLastnameInp").val(d.lastName || "");
+            $("#editProfileFirstnameInp").val(d.firstName || "");
+            $("#editProfileBioInp").val(d.bio || "");
+            $("#editProfileLocationInp").val(d.location || "");
+            $("#editProfileBirthDateInp").val(d.birthDate || "");
+            $("#editProfileBirthplaceInp").val(d.birthplace || "");
+            $("#editProfileLivesInInp").val(d.livesIn || "");
+            $("#editProfileGender").val(d.gender || "");
+            $("#editProfileStatus").val(d.status || "");
+            if (d.imageUrl) {
+                const newProfileImg = d.imageUrl + "?v=" + new Date().getTime();
+                $("#editProfileProfileImg").attr("src", newProfileImg);
+                $("#headerProfileImg").attr("src", newProfileImg);
+            }
+            if (d.coverImageUrl) {
+                const newCoverImg = d.coverImageUrl + "?v=" + new Date().getTime();
+                $("#editProfileCoverImg").attr("src", newCoverImg);
+                $("#headerCoverImg").attr("src", newCoverImg);
+            }
+
+            toast("success", res.message);
+        },
+    });
+});
+
+
+// WORK add/edit form submit
+$(document).on("submit", "#workFormEditProfilePage", function (e) {
+    e.preventDefault();
+
+    const form = $(this);
+
+    $.ajax({
+        url: "/User/Profile/AddOrUpdateWorkExperience",
+        type: "POST",
+        data: form.serialize(),
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Work experience update failed");
+                return;
+            }
+            const d = res.data;
+            $("#workNoInfoText").remove();
+            const itemId = `#workItem_${d.id}`;
+            const existingItem = $(itemId);
+            const dateText = `${d.startDateDisplay} - ${d.endDateDisplay}`;
+            if (existingItem.length) {
+                existingItem.find(".work-company-text").text(d.companyName);
+                existingItem.find(".work-position-text").text(d.position);
+                existingItem.find(".work-date-text").text(dateText);
+
+                const editLink = existingItem.find(".work-edit-btn");
+                editLink.data("company", d.companyName);
+                editLink.data("position", d.position);
+                editLink.data("start", d.startDateValue);
+                editLink.data("end", d.endDateValue);
+            } else {
+                const newItemHtml = `
+                <li id="workItem_${d.id}" data-work-id="${d.id}" class="border rounded-3 p-3 mb-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="work-company-text">${d.companyName}</h6>
+                        <p class="mb-0 text-muted work-position-text">${d.position}</p>
+                        <p class="mb-0 text-muted work-date-text">
+                            ${dateText}
+                        </p>
+                    </div>
+
+                    <div class="edit-relation">
+                        <a href="#" class="d-flex align-items-center gap-1 work-edit-btn"
+                           data-id="${d.id}"
+                           data-company="${d.companyName}"
+                           data-position="${d.position}"
+                           data-start="${d.startDateValue}"
+                           data-end="${d.endDateValue}" data-bs-toggle="modal"
+                           data-bs-target="#editProfileAddWorkModal">
+                            <i class="ph ph-pencil-simple"></i>
+                            <span class="edit-btn">Edit</span>
+                        </a>
+                        <a href="#" data-id="${d.id}" class="d-flex align-items-center gap-1 text-danger work-delete-btn mt-2">
+                            <i class="ph ph-trash"></i>
+                            <span class="delete-btn">Delete</span>
+                        </a>
+                    </div>
+                </li>`;
+
+                $("#editProfileWorkListUl").append(newItemHtml);
+            }
+            const modalEl = document.getElementById("editProfileAddWorkModal");
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance.hide();
+            resetWorkForm();
+            toast("success", res.message);
+        },
+        error: function (xhr) {
+            toast("error", "Could not update work experience");
+        }
+    });
+});
+
+// EDUCATION add/edit form submit
+$(document).on("submit", "#eduFormEditProfilePage", function (e) {
+    e.preventDefault();
+
+    const form = $(this);
+
+    $.ajax({
+        url: "/User/Profile/AddOrUpdateEducation",
+        type: "POST",
+        data: form.serialize(),
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Education update failed")
+                return;
+            }
+            const d = res.data;
+            $("#educationNoInfoText").remove();
+            const itemId = `#eduItem_${d.id}`;
+            const existingItem = $(itemId);
+            const dateText = `${d.startDateDisplay} - ${d.endDateDisplay}`;
+            if (existingItem.length) {
+                existingItem.find(".edu-school-text").text(d.schoolName);
+                existingItem.find(".edu-fielddegree-text").text(`${d.degree} - ${d.field}`);
+                existingItem.find(".edu-date-text").text(dateText);
+
+                const editLink = existingItem.find(".education-edit-btn");
+                editLink.data("school", d.schoolName);
+                editLink.data("field", d.field);
+                editLink.data("degree", d.degree);
+                editLink.data("start", d.startDateValue);
+                editLink.data("end", d.endDateValue);
+            } else {
+                const newItemHtml = `
+                <li id="eduItem_${d.id}" data-edu-id="${d.id}" class="border rounded-3 p-3 mb-2 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="edu-school-text">${d.schoolName}</h6>
+                        <p class="mb-0 text-muted edu-fielddegree-text">${d.degree} - ${d.field}</p>
+
+                        <p class="mb-0 text-muted edu-date-text">
+                            ${dateText}
+                        </p>
+                    </div>
+
+                    <div class="edit-relation">
+                        <a href="#" class="d-flex align-items-center gap-1 education-edit-btn"
+                           data-id="${d.id}"
+                           data-school="${d.schoolName}"
+                           data-field="${d.field}"
+                           data-degree="${d.degree}"
+                           data-start="${d.startDateValue}"
+                           data-end="${d.endDateValue}" data-bs-toggle="modal"
+                           data-bs-target="#editProfileAddEduModal">
+                            <i class="ph ph-pencil-simple"></i>
+                            <span class="edit-btn">Edit</span>
+                        </a>
+                        <a href="#" data-id="${d.id}" class="d-flex align-items-center gap-1 text-danger edu-delete-btn mt-2">
+                            <i class="ph ph-trash"></i>
+                            <span class="delete-btn">Delete</span>
+                        </a>
+                    </div>
+                </li>`;
+
+                $("#editProfileEduListUl").append(newItemHtml);
+            }
+            const modalEl = document.getElementById("editProfileAddEduModal");
+            const modalInstance = bootstrap.Modal.getInstance(modalEl);
+            modalInstance.hide();
+            resetEducationForm();
+            toast("success", res.message);
+        },
+        error: function (xhr) {
+            toast("error", "Could not update work experience");
+        }
+    });
+});
+
+// HOBBIES And INTERESTS update
+$(document).on("submit", "#editProfileHobbiesForm", function (e) {
+    e.preventDefault();
+
+    const form = $(this);
+
+    $.ajax({
+        url: "/User/Profile/UpdateHobbiesAndInterests",
+        type: "POST",
+        data: form.serialize(),
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Update failed");
+                return;
+            }
+            const d = res.data;
+            $("#editProfileHobbiesInp").val(d.hobbies || "");
+            $("#editProfileFavMoviesInp").val(d.favoriteMovies || "");
+            $("#editProfileFavGamesInp").val(d.favoriteGames || "");
+            $("#editProfileFavBooksInp").val(d.favoriteBooks || "");
+            toast("success", res.message);
+        },
+        error: function () {
+            toast("error", "Could not update hobbies and interests");
+        }
+    });
+});
+
+// Profile Image
+
+function uploadCroppedProfileImageEditProfile() {
+    if (!cropper) return;
+
+    const canvas = cropper.getCroppedCanvas({
+        width: 300,
+        height: 300
+    });
+
+    canvas.toBlob(function (blob) {
+        if (!blob) return;
+        const croppedFile = new File([blob], "profile-image.png", { type: "image/png" });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(croppedFile);
+
+        const input = document.getElementById("imageUploadInp");
+        input.files = dataTransfer.files; 
+        document.getElementById("deleteProfileImageFlag").value = "false";
+        const previewImg = document.querySelector("#editProfileProfileImg");
+        if (previewImg) {
+            previewImg.src = URL.createObjectURL(croppedFile);
+            $("#editProfileImageMenuText").text("Change photo");
+            $("#editProfileImageRemoveItem").removeClass("d-none");
+        }
+
+        $("#profileImageCropModal").modal("hide");
+    }, "image/png");
+}
+function editProfileDeleteProfileImage() {
+    const input = document.getElementById("imageUploadInp");
+    input.value = "";
+    document.getElementById("deleteProfileImageFlag").value = "true";
+    const previewImg = document.querySelector("#editProfileProfileImg");
+    if (previewImg) {
+        previewImg.src = "/uploads/profilep/default-profile-account.jpg";
+        $("#editProfileImageMenuText").text("Add photo");
+        $("#editProfileImageRemoveItem").addClass("d-none");
+    }
+}
+
+// Cover Image
+function uploadCroppedCoverImageEditProfile() {
+    if (!coverCropper) return;
+
+    const canvas = coverCropper.getCroppedCanvas({
+        width: 1200,
+        height: 300
+    });
+
+    canvas.toBlob(function (blob) {
+        if (!blob) return;
+        const croppedFile = new File([blob], "profile-image.png", { type: "image/png" });
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(croppedFile);
+
+        const input = document.getElementById("coverImageUploadInp");
+        input.files = dataTransfer.files;
+        document.getElementById("deleteCoverImageFlag").value = "false";
+        const previewImg = document.querySelector("#editProfileCoverImg");
+        if (previewImg) {
+            previewImg.src = URL.createObjectURL(croppedFile);
+            $("#editProfileCoverImageMenuText").text("Change photo");
+            $("#editProfileCoverImageRemoveItem").removeClass("d-none");
+        }
+
+        $("#coverImageCropModal").modal("hide");
+    }, "image/png");
+}
+function editProfileDeleteCoverImage() {
+    const input = document.getElementById("coverImageUploadInp");
+    input.value = "";
+    document.getElementById("deleteCoverImageFlag").value = "true";
+    const previewImg = document.querySelector("#editProfileCoverImg");
+    if (previewImg) {
+        previewImg.src = "/uploads/cover/default-cover-img.png";
+        $("#editProfileCoverImageMenuText").text("Add photo");
+        $("#editProfileCoverImageRemoveItem").addClass("d-none");
+    }
+}

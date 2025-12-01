@@ -22,7 +22,7 @@
             @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Bio))
             {
                 <div class="mb-3">
-                    <h5>About Me:</h5>
+                    <h5>About me:</h5>
                     <p class="mb-0 @(user.UserProfileInfo?.Bio == null ? "text-warning" : "")" id="profileInfoBioText">
                         @(user.UserProfileInfo?.Bio ?? "No information entered")</p>
                 </div>
@@ -50,7 +50,7 @@
             @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.BirthDate))
             {
                 <div class="mb-3">
-                    <h5>Birth Date:</h5>
+                    <h5>Birthdate:</h5>
                     <p class="mb-0 @(user.UserProfileInfo?.BirthDate == null ? "text-warning" : "")" id="profileInfoBirthDateText">
                         @(user.UserProfileInfo?.BirthDate?.ToString("dd/MM/yyyy") ?? "No information entered")</p>
                 </div>
@@ -70,7 +70,7 @@
             @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.LivesIn))
             {
                 <div class="mb-3">
-                    <h5>Lives In:</h5>
+                    <h5>Lives in:</h5>
                     <p class="mb-0 @(user.UserProfileInfo?.LivesIn == null ? "text-warning" : "")" id="profileInfoLivesInText">
                         @(user.UserProfileInfo?.LivesIn ?? "No information entered")</p>
                 </div>
@@ -86,7 +86,7 @@
             @if (ProfileVisibilityHelper.CanViewAboutInfo(Model, ProfileField.Status))
             {
                 <div class="mb-3">
-                    <h5>Status:</h5>
+                    <h5>Marital status:</h5>
                     <p class="mb-0 @(user.UserProfileInfo?.Status == null ? "text-warning" : "")" id="profileInfoStatusText">
                         @(user.UserProfileInfo?.Status ?? "No information entered")</p>
                 </div>
@@ -116,11 +116,11 @@
                 <!-- First Column -->
                 <div class="col-md-6">
                     <div class="mb-3">
-                        <label class="form-label">About Me</label>
+                        <label class="form-label">About me</label>
                         <textarea name="Bio" class="form-control" style="max-height: 123px; height: 123px" placeholder="Write something about yourself">@user.UserProfileInfo?.Bio</textarea>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Birth Date</label>
+                        <label class="form-label">Birthdate</label>
                         <input name="BirthDate" class="form-control" type="date"
                                value="@(user.UserProfileInfo?.BirthDate?.ToString("yyyy-MM-dd"))" />
                     </div>
@@ -138,7 +138,7 @@
                         <input name="Birthplace" class="form-control" placeholder="Write your place of birth" type="text" value="@user.UserProfileInfo?.Birthplace" />
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Lives In</label>
+                        <label class="form-label">Lives in</label>
                         <input name="LivesIn" class="form-control" placeholder="City, Country" type="text" value="@user.UserProfileInfo?.LivesIn" />
                     </div>
                     <div class="mb-3">
@@ -152,7 +152,7 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Status</label>
+                        <label class="form-label">Marital status</label>
                         <div class="d-flex gap-4">
                             <div>
                                 <div class="form-check">

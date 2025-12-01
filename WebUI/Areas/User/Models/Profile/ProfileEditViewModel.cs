@@ -16,6 +16,8 @@ namespace WebUI.Areas.User.Models.Profile
         public IFormFile? CoverImageFile { get; set; }
         public string? ImageUrl { get; set; }
         public string? CoverImageUrl { get; set; }
+        public bool DeleteProfileImage { get; set; }
+        public bool DeleteCoverImage { get; set; }
         public string? Bio { get; set; }
         public string? Location { get; set; }
 

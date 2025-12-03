@@ -20,6 +20,11 @@ namespace BusinessLayer.Concrete
 
         public async Task<List<UserSocialLink>> GetUserSocialLinksAsync(string userId)
         {
+            return await _userSocialLinkRepository.GetAllAsync(x => x.UserId == userId);
+        }
+
+        public async Task<List<UserSocialLink>> GetVisibleUserSocialLinksAsync(string userId)
+        {
             return await _userSocialLinkRepository.GetAllAsync(x => x.UserId == userId && x.IsVisible);
         }
     }

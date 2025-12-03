@@ -60,6 +60,8 @@
     <link rel="stylesheet" href="~/html/assets/vendor/phosphor-icons/Fonts/regular/style.css">
     <link rel="stylesheet" href="~/html/assets/vendor/phosphor-icons/Fonts/thin/style.css">
 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
 </head>
 
 <body class="">
@@ -1025,7 +1027,7 @@
                                             <div class="d-flex align-items-center gap-lg-3 gap-1 border-0 py-2 nav-links">
                                                 <i class="ph ph-user-gear fs-4"></i>
                                                 <div>
-                                                    <a asp-area="User" asp-controller="Profile" asp-action="EditProfile" class="mb-0 h6 fs-6 fw-normal"> Edit Profile </a>
+                                                    <a asp-area="User" asp-controller="ProfileSettings" asp-action="EditProfile" class="mb-0 h6 fs-6 fw-normal"> Edit Profile </a>
                                                 </div>
                                             </div>
                                             <div class="d-flex align-items-center gap-lg-3 gap-1 border-0 py-2 nav-links">
@@ -1832,6 +1834,21 @@
             </div>
         </div>
     </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+            document.addEventListener("DOMContentLoaded", function () {
+            const selects = document.querySelectorAll("select:not(.no-choices)");
+            selects.forEach(s => {
+                new Choices(s, {
+                    searchEnabled: false,
+                    itemSelectText: "",
+                    allowHTML: true
+                });
+            });
+        });
+    </script>
 
     <!--cropper-->
     <script src="https://unpkg.com/cropperjs@1.6.1/dist/cropper.min.js"></script>

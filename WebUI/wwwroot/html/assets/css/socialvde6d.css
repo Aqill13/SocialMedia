@@ -150,7 +150,8 @@
     --bs-highlight-bg: rgb(255, 241.2, 224.8);
     --bs-border-width: 1px;
     --bs-border-style: solid;
-    --bs-border-color: #f1f1f1;
+    /*    --bs-border-color: #f1f1f1;*/
+    --bs-border-color: #d0d0d0;
     --bs-border-color-translucent: rgba(0, 0, 0, 0.175);
     --bs-border-radius: 0.25rem;
     --bs-border-radius-sm: 0.125rem;
@@ -2821,7 +2822,24 @@ textarea.form-control-lg {
     .form-range:disabled::-moz-range-thumb {
         background-color: var(--bs-secondary-color)
     }
+.social-data-block li #socialPlatformIconHE {
+    font-size: 18px;
+    color: var(--bs-primary);
+    transition: color 0.3s;
+    border-radius: 50%;
+    border: 1px solid var(--bs-primary);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
 
+    .social-data-block li #socialPlatformIconHE:hover {
+        color: #fff;
+        background-color: var(--bs-primary);
+    }
 .form-floating {
     position: relative
 }
@@ -4998,7 +5016,7 @@ textarea.form-control-lg {
     --bs-accordion-transition: color 0.15s ease-in-out,background-color 0.15s ease-in-out,border-color 0.15s ease-in-out,box-shadow 0.15s ease-in-out,border-radius 0.15s ease;
     --bs-accordion-border-color: var(--bs-border-color);
     --bs-accordion-border-width: var(--bs-border-width);
-    --bs-accordion-border-radius: var(--bs-border-radius);
+    --bs-accordion-border-radius: var(--bs-border-radius-lg);
     --bs-accordion-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
     --bs-accordion-btn-padding-x: 1.5rem;
     --bs-accordion-btn-padding-y: 1rem;
@@ -5014,6 +5032,20 @@ textarea.form-control-lg {
     --bs-accordion-body-padding-y: 1rem;
     --bs-accordion-active-color: var(--bs-primary);
     --bs-accordion-active-bg: var(--bs-primary-bg-subtle)
+}
+.accordion-button::after {
+    filter: brightness(0) invert(1); 
+    transition: transform .2s ease, filter .2s ease;
+}
+
+.accordion-button:not(.collapsed)::after {
+    filter: invert(55%) sepia(94%) saturate(7500%) hue-rotate(200deg) brightness(100%) contrast(105%);
+    transform: rotate(180deg);
+}
+
+
+.accordion-button:not(.collapsed) {
+    color: var(--bs-primary);
 }
 
 .accordion-button {
@@ -5971,7 +6003,12 @@ textarea.form-control-lg {
     .toast:not(.show) {
         display: none
     }
-
+.socialUrlP {
+    max-width: 180px; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 .toast-container {
     --bs-toast-zindex: 1090;
     position: absolute;
@@ -7795,10 +7832,27 @@ textarea.form-control-lg {
     white-space: nowrap !important;
     border: 0 !important
 }
+.choices__inner {
+    height: 40px !important;
+    min-height: 40px !important;
+}
 
-    .visually-hidden-focusable:not(:focus):not(:focus-within):not(caption), .visually-hidden:not(caption) {
-        position: absolute !important
-    }
+.choices__list--dropdown .choices__item,
+.choices__list[aria-expanded] .choices__item {
+    padding: 3px !important;
+    font-size: 12.25px !important;
+}
+
+.choices__list {
+    background: var(--bs-modal-bg) !important;
+}
+.choices__placeholder {
+    opacity: 0.7 !important;
+}
+
+.visually-hidden-focusable:not(:focus):not(:focus-within):not(caption), .visually-hidden:not(caption) {
+    position: absolute !important
+}
 
     .visually-hidden *, .visually-hidden-focusable:not(:focus):not(:focus-within) * {
         overflow: hidden !important

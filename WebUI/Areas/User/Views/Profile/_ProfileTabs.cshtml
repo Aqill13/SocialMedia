@@ -2,7 +2,6 @@
 @{
     var user = Model.ProfileUser;
     var username = user.UserName;
-    var links = Model.SocialLinks;
 }
 
 <div class="card">
@@ -34,7 +33,7 @@
                 </li>
                 <li class="nav-item col-4 col-md-2 py-3">
                     <a class="@(Model.ActiveTopTab == "friend" ? "active" : "") profile-tab-ajax nav-link d-flex flex-column align-items-center flex-row justify-content-center gap-2"
-                       asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-username="@username">
+                       asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-username="@username" asp-route-mode="main">
                         <span class="icon rounded-3 fs-5 d-flex flex-column align-items-center justify-content-center p-3">
                             <i class="ph ph-users"></i>
                         </span>

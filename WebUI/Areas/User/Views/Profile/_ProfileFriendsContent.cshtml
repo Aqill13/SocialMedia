@@ -1,0 +1,15 @@
+﻿@model ProfileFriendsViewModel
+<div class="col-sm-12">
+    <div class="tab-content">
+        <div class="tab-pane fade show active" id="friends" role="tabpanel">
+            @await Html.PartialAsync("_FriendsTabs", Model)
+            <div class="card">
+                <div class="card-body">
+                    <div class="tab-content" id="friendsTabContent">
+                        @await Html.PartialAsync("_FriendsTabBottomContent", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

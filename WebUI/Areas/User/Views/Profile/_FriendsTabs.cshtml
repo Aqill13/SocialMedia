@@ -1,0 +1,44 @@
+﻿@model ProfileFriendsViewModel
+<div class="card">
+    <div class="d-flex justify-content-between align-items-center p-0 friends-header rounded">
+        <div class="custom-nav-slider position-relative w-100">
+            <div class="scroll-container">
+                <ul class="nav nav-pills nav-tab-bottom-border d-flex align-items-center list-item-tabs p-3 px-4 m-0"
+                    id="friends-requests-tab">
+                    <li class="nav-item">
+                        <a role="button" class="friendsTabsItem nav-link d-flex align-items-center gap-2 @(Model.ActiveSection == "friends" ? "active" : "")"
+                           asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-section="friends" asp-route-mode="bottom">
+                            Friends<span class="rounded-pill badge-pill bg-success font-size-12 py-0 px-2">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a role="button" class="friendsTabsItem nav-link d-flex align-items-center gap-2 @(Model.ActiveSection == "followers" ? "active" : "")"
+                           asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-section="followers" asp-route-mode="bottom">
+                            Followers<span class="rounded-pill badge-pill bg-success font-size-12 py-0 px-2">@Model.Followers.Count</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a role="button" class="friendsTabsItem nav-link d-flex align-items-center gap-2 @(Model.ActiveSection == "following" ? "active" : "")"
+                           asp-area="User" asp-controller="Profile" asp-action="Friends" asp-route-section="following" asp-route-mode="bottom">
+                            Following<span class="rounded-pill badge-pill bg-success font-size-12 py-0 px-2">@Model.Following.Count</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        @if (Model.ActiveSection == "followers" || Model.ActiveSection == "following")
+        {
+            <div class="dropdown order-dropdown d-flex align-items-center justify-content-between  p-3 col-12 col-md-3">
+                <span class="flex-shrink-0">Order By:</span>
+                <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="active-filter fs-6">Follow date: Latest</span>
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item fs-6" href="#">Follow date: Oldest</a></li>
+                    <li><a class="dropdown-item fs-6" href="#">Follow date: Latest</a></li>
+                </ul>
+            </div>
+        }
+    </div>
+</div>

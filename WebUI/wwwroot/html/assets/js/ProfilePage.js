@@ -52,6 +52,18 @@ $(document).on("click", ".about-ajax", function (e) {
     });
 });
 
+// AJAX Friends Section Loading
+$(document).on("click", ".friendsTabsItem", function (e) {
+    e.preventDefault();
+
+    const url = $(this).attr("href");
+
+    $("#friendsTabContent").load(url, function () {
+        $(".friendsTabsItem").removeClass("active");
+        $(`a[href='${url}']`).addClass("active");
+    });
+});
+
 // Section View/Edit Toggle
 function showSectionView(viewId, editId) {
     $(editId).removeClass("active show");
@@ -161,7 +173,7 @@ $(document).on("submit", "#profileInfoForm", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/UpdateProfileInfo",
+        url: "/User/ProfileSettings/UpdateProfileInfo",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -209,7 +221,7 @@ $(document).on("submit", "#hobbiesAndInterestsForm", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/UpdateHobbiesAndInterests",
+        url: "/User/ProfileSettings/UpdateHobbiesAndInterests",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -248,7 +260,7 @@ $(document).on("submit", "#workForm", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/AddOrUpdateWorkExperience",
+        url: "/User/Work/AddOrUpdateWorkExperience",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -332,7 +344,7 @@ $(document).on("click", ".work-delete-btn", function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "/User/Profile/DeleteWorkExperience",
+                url: "/User/Work/DeleteWorkExperience",
                 type: "POST",
                 data: { id: id },
                 success: function (res) {
@@ -370,7 +382,7 @@ $(document).on("submit", "#educationForm", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/AddOrUpdateEducation",
+        url: "/User/Education/AddOrUpdateEducation",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -457,7 +469,7 @@ $(document).on("click", ".edu-delete-btn", function (e) {
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
-                url: "/User/Profile/DeleteEducation",
+                url: "/User/Education/DeleteEducation",
                 type: "POST",
                 data: { id: id },
                 success: function (res) {
@@ -492,7 +504,7 @@ $(document).on("click", ".edu-delete-btn", function (e) {
 $(document).on("change", "#privateAccCheckInp", function () {
     const isPrivate = $(this).is(":checked");
     $.ajax({
-        url: "/User/Profile/TogglePrivateAccount",
+        url: "/User/ProfileSettings/TogglePrivateAccount",
         type: "post",
         data: { isPrivate: isPrivate },
         success: function (res) {
@@ -520,7 +532,7 @@ $(document).on("change", "#visibilitySelect", function () {
     const visibility = $(this).val();
 
     $.ajax({
-        url: "/User/Profile/UpdateVisibility",
+        url: "/User/ProfileSettings/UpdateVisibility",
         type: "POST",
         data: { field: field, visibility: visibility },
         success: function () {
@@ -538,8 +550,16 @@ $(document).on("submit", "#addSocialLinkForm", function (e) {
     e.preventDefault();
     const platform = $("#platform").val();
     const socialUrl = $("#socialUrl").val();
+    if (!socialUrl || socialUrl.trim() === "") {
+        toast("error", "Please enter a valid URL");
+        return;
+    }
+    if (!platform || platform.trim() === "") {
+        toast("error", "Please select a platform");
+        return;
+    }
     $.ajax({
-        url: "/User/Profile/AddSocialLink",
+        url: "/User/SocialLinks/AddSocialLink",
         type: "post",
         data: { platform: platform, url: socialUrl },
         success: function (response) {
@@ -551,13 +571,13 @@ $(document).on("submit", "#addSocialLinkForm", function (e) {
                 $("#noSocialLinksPlaceholder").remove();
                 $("#platform option[value='" + response.platformValue + "']").remove();
                 var remaining = $("#platform option").length;
-                if (remaining === 0) {
+                if (remaining === 1) {
                     $("#AddasocialaccountLink").hide();
                 }
                 $("#social-data-block").append(`
                         <li class="text-center">
                             <a href="${response.url}">
-                                <i class="${response.iconClass}"></i>
+                                <i id="socialPlatformIconHE" class="${response.iconClass}"></i>
                             </a>
                         </li>
                     `);
@@ -590,7 +610,7 @@ function openCropperModal(event) {
         }
 
         cropper = new Cropper(img, {
-            aspectRatio: 1,        
+            aspectRatio: 1,
             viewMode: 1,
             autoCropArea: 1,
             background: false,
@@ -623,7 +643,7 @@ function uploadCroppedProfileImage() {
         formData.append('file', blob, 'avatar.png');
 
         $.ajax({
-            url: '/User/Profile/ChangeProfileImage',
+            url: '/User/Media/ChangeProfileImage',
             type: 'POST',
             data: formData,
             processData: false,
@@ -642,14 +662,14 @@ function uploadCroppedProfileImage() {
                 }
             }
         });
-    }, 'image/png',0.9);
+    }, 'image/png', 0.9);
 }
 
 // Remove Profile Image
 $(document).on("click", "#profileImageRemoveItem", function (e) {
     e.preventDefault();
     $.ajax({
-        url: '/User/Profile/RemoveProfileImage',
+        url: '/User/Media/RemoveProfileImage',
         type: 'POST',
         success: function (res) {
             if (res && res.success) {
@@ -685,7 +705,7 @@ function openCoverImgCropperModal(event) {
         }
 
         coverCropper = new Cropper(img, {
-            aspectRatio: 4/1,        
+            aspectRatio: 4 / 1,
             viewMode: 1,
             autoCropArea: 1,
             background: false,
@@ -716,7 +736,7 @@ function uploadCroppedCoverImage() {
         formData.append('file', blob, 'avatar.png');
 
         $.ajax({
-            url: '/User/Profile/ChangeCoverImage',
+            url: '/User/Media/ChangeCoverImage',
             type: 'POST',
             data: formData,
             processData: false,
@@ -739,7 +759,7 @@ function uploadCroppedCoverImage() {
 $(document).on("click", "#coverImageRemoveItem", function (e) {
     e.preventDefault();
     $.ajax({
-        url: '/User/Profile/RemoveCoverImage',
+        url: '/User/Media/RemoveCoverImage',
         type: 'POST',
         success: function (res) {
             if (res && res.success) {
@@ -766,7 +786,7 @@ $(document).on("submit", "#editProfileBasicInfoForm", function (e) {
     e.preventDefault();
     const formData = new FormData(this);
     $.ajax({
-        url: "/User/Profile/EditProfile",
+        url: "/User/ProfileSettings/EditProfile",
         type: "POST",
         data: formData,
         processData: false,
@@ -812,7 +832,7 @@ $(document).on("submit", "#workFormEditProfilePage", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/AddOrUpdateWorkExperience",
+        url: "/User/Work/AddOrUpdateWorkExperience",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -885,7 +905,7 @@ $(document).on("submit", "#eduFormEditProfilePage", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/AddOrUpdateEducation",
+        url: "/User/Education/AddOrUpdateEducation",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -961,7 +981,7 @@ $(document).on("submit", "#editProfileHobbiesForm", function (e) {
     const form = $(this);
 
     $.ajax({
-        url: "/User/Profile/UpdateHobbiesAndInterests",
+        url: "/User/ProfileSettings/UpdateHobbiesAndInterests",
         type: "POST",
         data: form.serialize(),
         success: function (res) {
@@ -983,7 +1003,6 @@ $(document).on("submit", "#editProfileHobbiesForm", function (e) {
 });
 
 // Profile Image
-
 function uploadCroppedProfileImageEditProfile() {
     if (!cropper) return;
 
@@ -1000,7 +1019,7 @@ function uploadCroppedProfileImageEditProfile() {
         dataTransfer.items.add(croppedFile);
 
         const input = document.getElementById("imageUploadInp");
-        input.files = dataTransfer.files; 
+        input.files = dataTransfer.files;
         document.getElementById("deleteProfileImageFlag").value = "false";
         const previewImg = document.querySelector("#editProfileProfileImg");
         if (previewImg) {
@@ -1064,3 +1083,218 @@ function editProfileDeleteCoverImage() {
         $("#editProfileCoverImageRemoveItem").addClass("d-none");
     }
 }
+
+// Social Links Visibility
+$(document).on("click", ".social-visible-btn", function (e) {
+    e.preventDefault();
+    const el = $(this);
+    const id = el.data("id");
+    const isVisible = el.data("visible") === true || el.data("visible") === "true";
+    let newVisible = !isVisible;
+    $.ajax({
+        url: "/User/SocialLinks/UpdateSocialLinkVisibility",
+        type: "POST",
+        data: { id: id, isVisible: newVisible },
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Could not update social link visibility");
+                return;
+            }
+            else {
+                if (newVisible) {
+                    el.removeClass("text-info").addClass("text-warning");
+                    el.find("i").removeClass("fa-eye-slash").addClass("fa-eye");
+                    el.find(".visible-btn").text("Visible");
+                } else {
+                    el.removeClass("text-warning").addClass("text-info");
+                    el.find("i").removeClass("fa-eye").addClass("fa-eye-slash");
+                    el.find(".visible-btn").text("Hidden");
+                }
+                el.data("visible", newVisible);
+                toast("success", res.message);
+            }
+        },
+        error: function () {
+            toast("error", "Could not update social link visibility");
+        }
+    });
+});
+
+// Social Links Edit
+$(document).on("click", ".social-edit-btn", function (e) {
+    e.preventDefault();
+    const el = $(this);
+    const id = el.data("id");
+    const platform = el.data("platform");
+    const url = el.data("url");
+    let iconClass = "";
+    switch (platform.toLowerCase()) {
+        case "facebook":
+            iconClass = "fa-brands fa-facebook-f fs-1";
+            break;
+        case "twitter":
+            iconClass = "fa-brands fa-x-twitter fs-1";
+            break;
+        case "instagram":
+            iconClass = "fa-brands fa-instagram fs-1";
+            break;
+        case "linkedin":
+            iconClass = "fa-brands fa-linkedin-in fs-1";
+            break;
+        case "github":
+            iconClass = "fa-brands fa-github fs-1";
+            break;
+        case "youtube":
+            iconClass = "fa-brands fa-youtube fs-1";
+            break;
+        default:
+            iconClass = "fas fa-globe fs-1";
+    }
+    $("#editProfileSocialLinkModalIcon").attr("class", iconClass);
+    $("#editSocialIdModal").val(id);
+    $("#editSocialUrlModal").val(url);
+    $("#editProfileSocialLinkModal").modal("show");
+});
+
+$(document).on("click", "#modalSaveSocialEditBtn", function (e) {
+    const id = $("#editSocialIdModal").val();
+    const url = $("#editSocialUrlModal").val();
+    if (!url || url.trim() === "") {
+        toast("error", "Please enter a valid URL");
+        return;
+    }
+    $.ajax({
+        url: "/User/SocialLinks/UpdateSocialLink",
+        type: "POST",
+        data: { id: id, url: url },
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Could not update social link");
+                return;
+            }
+            else {
+                const item = $(`#socialItem-${id}`);
+                item.find(".socialUrlP")
+                    .text(url.length > 35 ? url.substring(0, 35) + "..." : url);
+                item.find(".social-edit-btn").data("url", url);
+
+                $("#editProfileSocialLinkModal").modal("hide");
+                toast("success", res.message);
+            }
+        },
+        error: function () {
+            toast("error", "Could not update social link");
+        }
+    });
+});
+
+// Delete Social Link
+$(document).on("click", ".social-delete-btn", function (e) {
+    e.preventDefault();
+    const el = $(this);
+    const id = el.data("id");
+    Swal.fire({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to restore this social link!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Yes, delete it!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: "/User/SocialLinks/DeleteSocialLink",
+                type: "POST",
+                data: { id: id },
+                success: function (res) {
+                    if (!res || !res.success) {
+                        toast("error", res.message || "Could not delete social link");
+                        return;
+                    }
+                    const item = $(`#socialItem-${id}`);
+                    item.remove();
+                    $("#newSocialPlatform").append(new Option(res.platformName, res.platformValue));
+                    $("#addSocialLinkBoxEditProfile").removeClass("d-none");
+                    toast("success", res.message);
+                },
+                error: function () {
+                    toast("error", "Could not delete social link");
+                }
+            });
+        }
+    });
+});
+
+// Add New Social link
+$(document).on("click", "#editProfileAddSocialBtn", function (e) {
+    const platform = $("#newSocialPlatform").val();
+    const url = $("#newSocialUrl").val();
+
+    if (!url || url.trim() === "") {
+        toast("error", "Please enter a valid URL");
+        return;
+    }
+    if (!platform || platform.trim() === "") {
+        toast("error", "Please select a platform");
+        return;
+    }
+
+    $.ajax({
+        url: "/User/SocialLinks/AddSocialLink",
+        type: "POST",
+        data: { platform: platform, url: url },
+        success: function (res) {
+            if (!res || !res.success) {
+                toast("error", res.message || "Could not add social link");
+                return;
+            }
+            const visibleHtml = `
+                <a role="button" data-id="${res.id}" data-visible="true"
+                   class="text-warning d-flex align-items-center gap-1 mt-1 social-visible-btn">
+                    <i class="fa-solid fa-eye"></i>
+                    <span class="visible-btn">Visible</span>
+                </a>
+            `;
+            $("#editProfileSocialListUl").append(`
+                <li class="col-md-6" id="socialItem-${res.id}">
+                    <div class="d-flex align-items-center justify-content-between border rounded-3 p-2 px-3">
+                        <div class="d-flex align-items-center gap-3">
+                            <i id="socialPlatformIconHE" class="${res.iconClass}"></i>
+                            <div class="d-flex flex-column">
+                                <label class="form-label mb-0 fs-6">${res.platform}</label>
+                                <p class="mb-0 socialUrlP">${res.url}</p>
+                            </div>
+                        </div>
+                        <div class="edit-relation">
+                            <a role="button" class="d-flex align-items-center gap-1 social-edit-btn"
+                               data-id="${res.id}"
+                               data-url="${res.url}"
+                               data-platform="${res.platform}"
+                               data-bs-target="#editProfileSocialLinkModal" data-bs-toggle="modal">
+                                <i class="ph ph-pencil-simple"></i>
+                                <span class="edit-btn">Edit</span>
+                            </a>
+                            ${visibleHtml}
+                            <a role="button" data-id="${res.id}"
+                               class="d-flex align-items-center gap-1 text-danger social-delete-btn mt-1">
+                                <i class="ph ph-trash"></i>
+                                <span class="delete-btn">Delete</span>
+                            </a>
+                        </div>
+                    </div>
+                </li>
+            `);
+            $("#newSocialPlatform option[value='" + res.platformValue + "']").remove();
+            if ($("#newSocialPlatform option").length === 1) {
+                $("#addSocialLinkBoxEditProfile").addClass("d-none");
+            }
+            $("#newSocialUrl").val("");
+            toast("success", res.message);
+        },
+        error: function () {
+            toast("error", "Could not add social link");
+        }
+    });
+});
+

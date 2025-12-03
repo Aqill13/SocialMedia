@@ -10,5 +10,6 @@ namespace BusinessLayer.Abstract
     public interface IUserSocialLinkService : IGenericService<UserSocialLink>
     {
         Task<List<UserSocialLink>> GetUserSocialLinksAsync(string userId);
+        Task<List<UserSocialLink>> GetVisibleUserSocialLinksAsync(string userId);
     }
 }

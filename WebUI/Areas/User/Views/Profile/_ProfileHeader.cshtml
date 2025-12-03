@@ -4,32 +4,13 @@
 @{
     var user = Model.ProfileUser;
     var username = user.UserName;
-    var links = Model.SocialLinks;
+    var visibleLinks = Model.VisibleSocialLinks;
+    var userLinks = Model.UserSocialLinks;
     var isOwner = Model.IsOwner;
     var totalSocialLinks = Enum.GetValues(typeof(SocialPlatform)).Length;
-    var usedPlatforms = new HashSet<SocialPlatform>(links.Select(x => x.Platform));
+    var usedPlatforms = new HashSet<SocialPlatform>(userLinks.Select(x => x.Platform));
     var hasCustomImage = !string.IsNullOrEmpty(user.ImageUrl) && !user.ImageUrl.Contains("default-profile-account");
 }
-<style>
-    .social-data-block li i {
-        font-size: 18px;
-        color: var(--bs-primary);
-        transition: color 0.3s;
-        border-radius: 50%;
-        border: 1px solid var(--bs-primary);
-        width: 36px;
-        height: 36px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-    }
-
-        .social-data-block li i:hover {
-            color: #fff;
-            background-color: var(--bs-primary);
-        }
-</style>
 
 <div class="col-sm-12">
     <!-- user haqda -->
@@ -59,7 +40,7 @@
                                       data-bs-toggle="dropdown"
                                       aria-expanded="false">
                                     <i class="ph ph-camera fs-5 text-white"></i>
-                                </span> 
+                                </span>
 
                                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="avatarMenuToggle">
                                     <li>
@@ -107,7 +88,7 @@
                         <div class="social-links mt-3 d-flex justify-content-center align-items-center">
                             <ul id="social-data-block" class="social-data-block d-flex align-items-center justify-content-center gap-3 list-inline p-0 m-0">
 
-                                @foreach (var link in links)
+                                @foreach (var link in visibleLinks)
                                 {
                                     var iconClass = link.Platform switch
                                     {
@@ -119,28 +100,20 @@
                                         SocialPlatform.Youtube => "fa-brands fa-youtube",
                                         _ => "ph ph-globe"
                                     };
-
                                     <li class="text-center">
                                         <a href="@link.Url">
-                                            <i class="@iconClass"></i>
+                                            <i id="socialPlatformIconHE" class="@iconClass"></i>
                                         </a>
                                     </li>
                                 }
                             </ul>
-                            @if (Model.IsOwner && !links.Any())
+                            @if (Model.IsOwner && !userLinks.Any())
                             {
                                 <div id="noSocialLinksPlaceholder" class="text-center text-muted small mt-2">
                                     You haven't added a social media account yet.
-                                    <br />
-                                    <button type="button"
-                                            class="btn btn-link p-0 text-decoration-none"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#addSocialLinkModal">
-                                        Add a social account
-                                    </button>
                                 </div>
                             }
-                            @if (Model.IsOwner && totalSocialLinks > links.Count)
+                            @if (Model.IsOwner && totalSocialLinks > userLinks.Count)
                             {
                                 <button type="button" id="AddasocialaccountLink"
                                         class="btn btn-link p-0 text-decoration-none ms-3"
@@ -156,7 +129,7 @@
                 <div class="col-lg-4 profile-right text-lg-end text-center mt-3 mt-lg-0">
                     @if (isOwner)
                     {
-                        <a asp-area="User" asp-controller="Profile" asp-action="EditProfile" class="btn btn-outline-secondary rounded-3 fs-6">
+                        <a asp-area="User" asp-controller="ProfileSettings" asp-action="EditProfile" class="btn btn-outline-secondary rounded-3 fs-6">
                             <i class="fa-solid fa-pen-to-square me-2"></i>
                             Edit profile
                         </a>
@@ -210,7 +183,8 @@
 
                     <div class="mb-3">
                         <label class="form-label">Platform</label>
-                        <select class="form-select" name="platform" id="platform">
+                        <select class="form-select no-choices" name="platform" id="platform">
+                            <option value="">Select platform</option>
                             @foreach (SocialPlatform value in Enum.GetValues(typeof(UserSocialLink.SocialPlatform)))
                             {
                                 @if (!usedPlatforms.Contains(value))
@@ -224,7 +198,7 @@
                     <div class="mb-3">
                         <label class="form-label">Profile URL</label>
                         <input type="url" name="url" id="socialUrl" class="form-control"
-                               placeholder="https://instagram.com/username" />
+                               placeholder="https://social/username" />
                     </div>
 
                 </div>

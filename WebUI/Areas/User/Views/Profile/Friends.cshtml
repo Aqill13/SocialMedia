@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Friends";
+    Layout = "~/Areas/User/Views/Shared/_UserLayout.cshtml";
+}
+@model ProfileFriendsViewModel
+<div>
+    <div class="position-relative">
+    </div>
+    <div class="content-inner " id="page_layout">
+        @await Html.PartialAsync("_ProfileCoverImg", Model)
+
+        <div class="container">
+            <div class="row">
+                @await Html.PartialAsync("_ProfileHeader", Model)
+                <div id="profileMainContent">
+                    @await Html.PartialAsync("_ProfileFriendsContent", Model)
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

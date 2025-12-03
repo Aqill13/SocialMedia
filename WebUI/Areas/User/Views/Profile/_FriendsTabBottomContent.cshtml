@@ -1,0 +1,14 @@
+﻿@model ProfileFriendsViewModel
+
+@if (Model.ActiveSection == "friends")
+{
+    @await Html.PartialAsync("_FriendsTabBottomContent_Friends", Model)
+}
+@if (Model.ActiveSection == "followers")
+{
+    @await Html.PartialAsync("_FriendsTabBottomContent_Followers", Model)
+}
+@if (Model.ActiveSection == "following")
+{
+    @await Html.PartialAsync("_FriendsTabBottomContent_Following", Model)
+}
